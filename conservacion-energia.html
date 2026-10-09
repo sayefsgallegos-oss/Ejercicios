@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conservación de la Energía</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ep:#3b82f6; --ep-soft:#dbeafe;
+    --ec:#10b981; --ec-soft:#d1fae5;
+    --em:#8b5cf6; --em-soft:#ede9fe;
+    --warn:#f59e0b; --bad:#ef4444; --ok:#10b981;
+    --ink:#1e1b4b; --muted:#6b7280;
+    --bg:#f5f3ff; --card:#ffffff;
+    --radius:22px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:'Nunito',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 10% 0%, #e0e7ff 0, transparent 40%),
+      radial-gradient(circle at 90% 10%, #fce7f3 0, transparent 35%),
+      var(--bg);
+    min-height:100vh;
+  }
+  .wrap{max-width:1200px;margin:0 auto;padding:16px}
+  header{text-align:center;padding:18px 8px 8px}
+  header h1{margin:0;font-size:clamp(1.6rem,4vw,2.6rem);font-weight:900;letter-spacing:-.5px}
+  header h1 span{background:linear-gradient(90deg,var(--ep),var(--em),var(--ec));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .big-formula{display:inline-flex;gap:8px;align-items:center;margin-top:10px;font-size:clamp(1rem,2.6vw,1.35rem);font-weight:800;background:#fff;padding:8px 18px;border-radius:999px;box-shadow:0 4px 14px rgba(76,29,149,.08)}
+  .c-ep{color:var(--ep)} .c-ec{color:var(--ec)} .c-em{color:var(--em)}
+
+  /* Tabs */
+  .tabs{display:flex;gap:10px;justify-content:center;margin:18px 0 14px;flex-wrap:wrap}
+  .tab{border:none;cursor:pointer;font:inherit;font-weight:900;font-size:1.1rem;padding:14px 26px;border-radius:999px;background:#fff;color:var(--ink);box-shadow:0 4px 14px rgba(76,29,149,.1);transition:transform .15s, background .2s}
+  .tab:hover{transform:translateY(-2px)}
+  .tab.active{background:linear-gradient(135deg,var(--em),#6366f1);color:#fff}
+  .view{display:none;animation:fade .35s ease}
+  .view.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .card{background:var(--card);border-radius:var(--radius);box-shadow:0 8px 28px rgba(76,29,149,.08);padding:16px}
+
+  /* Concept cards */
+  .concepts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+  .concept{border-radius:18px;padding:12px 14px;display:flex;gap:12px;align-items:center}
+  .concept .emo{font-size:2rem}
+  .concept b{display:block;font-size:1.15rem}
+  .concept small{color:var(--muted);font-weight:700}
+  .concept.ep{background:var(--ep-soft)} .concept.ec{background:var(--ec-soft)} .concept.em{background:var(--em-soft)}
+
+  /* Simulator */
+  .simgrid{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(280px,1fr);gap:14px}
+  .stage{position:relative;padding:10px}
+  #track{width:100%;display:block;border-radius:16px;touch-action:none;cursor:grab}
+  #track.dragging{cursor:grabbing}
+  .hint-bubble{position:absolute;top:22px;left:50%;transform:translateX(-50%);background:var(--warn);color:#fff;font-weight:900;padding:8px 16px;border-radius:999px;box-shadow:0 6px 16px rgba(245,158,11,.4);animation:bob 1.2s ease-in-out infinite;pointer-events:none;z-index:2;white-space:nowrap}
+  @keyframes bob{50%{transform:translate(-50%,-6px)}}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
+  .btn{border:none;cursor:pointer;font:inherit;font-weight:900;font-size:1rem;padding:11px 18px;border-radius:14px;background:#eef2ff;color:var(--ink);transition:transform .1s, filter .2s}
+  .btn:hover{filter:brightness(.96)}
+  .btn:active{transform:scale(.96)}
+  .btn.primary{background:linear-gradient(135deg,var(--ec),#059669);color:#fff}
+  .btn.purple{background:linear-gradient(135deg,var(--em),#6366f1);color:#fff}
+  .btn.orange{background:linear-gradient(135deg,#fbbf24,var(--warn));color:#fff}
+  .ctrl{display:flex;flex-direction:column;gap:2px;background:#f8fafc;padding:8px 12px;border-radius:14px;flex:1;min-width:170px}
+  .ctrl label{font-weight:800;font-size:.9rem;display:flex;justify-content:space-between}
+  .ctrl label output{color:var(--em)}
+  input[type=range]{width:100%;accent-color:var(--em);height:26px}
+  .planets{display:flex;gap:6px;flex-wrap:wrap}
+  .planet{border:2px solid transparent;background:#f1f5f9;border-radius:12px;padding:6px 10px;cursor:pointer;font:inherit;font-weight:800;font-size:.9rem}
+  .planet.active{border-color:var(--em);background:var(--em-soft)}
+
+  .panel{display:flex;flex-direction:column;gap:10px}
+  .readouts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .readout{background:#f8fafc;border-radius:16px;padding:10px;text-align:center}
+  .readout .lbl{font-weight:800;color:var(--muted);font-size:.85rem}
+  .readout .val{font-weight:900;font-size:1.7rem;line-height:1.1}
+  .readout .sub{font-weight:700;color:var(--muted);font-size:.8rem}
+  .ecards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .ecard{border-radius:16px;padding:8px 6px;text-align:center;transition:transform .2s}
+  .ecard .lbl{font-weight:900;font-size:.95rem}
+  .ecard .val{font-weight:900;font-size:1.15rem}
+  .ecard.ep{background:var(--ep-soft);color:#1d4ed8}
+  .ecard.ec{background:var(--ec-soft);color:#047857}
+  .ecard.em{background:var(--em-soft);color:#6d28d9}
+  .stack{height:34px;border-radius:12px;overflow:hidden;display:flex;background:#e5e7eb;position:relative}
+  .stack div{height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:.85rem;transition:width .08s linear;white-space:nowrap;overflow:hidden}
+  .stack .s-ep{background:var(--ep)} .stack .s-ec{background:var(--ec)}
+  .stack-cap{display:flex;justify-content:space-between;font-size:.8rem;font-weight:800;color:var(--muted)}
+  .formulas{background:#fafaff;border-radius:16px;padding:10px 12px;font-size:.98rem;line-height:1.9;font-weight:700}
+  .formulas .row{white-space:nowrap;overflow-x:auto}
+  #hist{width:100%;height:120px;display:block;background:#fafaff;border-radius:14px}
+  .legend{display:flex;gap:12px;font-size:.8rem;font-weight:800;justify-content:center}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:4px;vertical-align:-1px}
+
+  .missions{margin-top:14px}
+  .missions h3{margin:0 0 10px;font-weight:900}
+  .mlist{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px}
+  .mission{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:14px;background:#f8fafc;font-weight:800;transition:background .3s, transform .3s}
+  .mission .tick{width:28px;height:28px;border-radius:50%;border:3px solid #cbd5e1;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1rem}
+  .mission.done{background:var(--ec-soft)}
+  .mission.done .tick{background:var(--ec);border-color:var(--ec);color:#fff}
+  .mission.pop{animation:pop .5s}
+  @keyframes pop{40%{transform:scale(1.05)}}
+  .insight{margin-top:10px;padding:10px 14px;border-radius:14px;background:#fff7ed;border-left:6px solid var(--warn);font-weight:700}
+
+  /* Toast */
+  #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(120px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:999px;font-weight:900;transition:transform .3s;z-index:50;max-width:92vw;text-align:center}
+  #toast.show{transform:translateX(-50%) translateY(0)}
+  #confetti{position:fixed;inset:0;pointer-events:none;z-index:40}
+
+  /* Exercises */
+  .method{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:12px}
+  .method .m{background:#fff;border-radius:999px;padding:8px 14px;font-weight:800;box-shadow:0 3px 10px rgba(76,29,149,.07);font-size:.95rem}
+  .method .arrow{align-self:center;color:var(--muted);font-weight:900}
+  .ex-nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:12px}
+  .ex-chip{border:3px solid transparent;background:#fff;border-radius:16px;padding:8px 12px;cursor:pointer;font:inherit;font-weight:900;box-shadow:0 3px 10px rgba(76,29,149,.07);display:flex;align-items:center;gap:6px}
+  .ex-chip.active{border-color:var(--em)}
+  .ex-chip.solved{background:var(--ec-soft)}
+  .ex-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:space-between}
+  .ex-head h3{margin:0;font-size:1.5rem;font-weight:900}
+  .tag{display:inline-block;font-weight:900;font-size:.8rem;padding:4px 10px;border-radius:999px;color:#fff}
+  .tag.vel{background:var(--ec)} .tag.alt{background:var(--ep)}
+  .score{font-weight:900;font-size:1.1rem;background:#fff7ed;padding:6px 14px;border-radius:999px}
+  .ex-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:16px;margin-top:12px;align-items:start}
+  .ex-fig{background:linear-gradient(#eff6ff,#f8fafc);border-radius:18px;padding:8px}
+  .ex-fig svg{width:100%;height:auto;display:block}
+  .story{font-size:1.2rem;font-weight:700;margin:0 0 10px;line-height:1.5}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .chip{background:var(--em-soft);color:#5b21b6;font-weight:900;border-radius:12px;padding:6px 12px;font-size:1.05rem}
+  .chip.zero{background:#f1f5f9;color:#475569}
+  .question{font-size:1.25rem;font-weight:900;background:#fef3c7;border-radius:14px;padding:10px 14px;margin-bottom:12px}
+  .answer-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-weight:900;font-size:1.2rem}
+  .answer-row input{font:inherit;font-weight:900;font-size:1.25rem;width:130px;padding:10px 12px;border-radius:14px;border:3px solid #c7d2fe;outline:none;text-align:center}
+  .answer-row input:focus{border-color:var(--em)}
+  .answer-row input.good{border-color:var(--ok);background:var(--ec-soft)}
+  .answer-row input.badi{border-color:var(--bad);background:#fee2e2;animation:shake .4s}
+  @keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+  .feedback{min-height:30px;margin-top:8px;font-weight:900;font-size:1.1rem}
+  .feedback.ok{color:var(--ok)} .feedback.no{color:var(--bad)}
+  .steps{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+  .step{display:flex;gap:12px;align-items:flex-start;background:#f8fafc;border-radius:16px;padding:12px 14px;animation:slide .4s ease}
+  @keyframes slide{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+  .step .num{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+  .step h4{margin:0 0 4px;font-weight:900;font-size:1.05rem}
+  .step .math{font-size:1.15rem;font-weight:800;line-height:2;overflow-x:auto}
+  .step .note{color:var(--muted);font-weight:700;font-size:.95rem}
+  .ex-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.15;margin:0 2px;font-size:.92em}
+  .frac>span:first-child{border-bottom:2px solid currentColor;padding:0 3px}
+  .frac>span:last-child{padding:0 3px}
+  .sq{border-top:2px solid currentColor;padding:0 3px;margin-left:1px}
+  .res{background:#fef3c7;border-radius:8px;padding:0 6px}
+  .cancel{text-decoration:line-through;text-decoration-color:var(--bad);text-decoration-thickness:3px}
+
+  @media (max-width: 900px){
+    .simgrid{grid-template-columns:1fr}
+    .ex-body{grid-template-columns:1fr}
+  }
+  @media (max-width: 600px){
+    .wrap{padding:10px}
+    .concepts{grid-template-columns:1fr}
+    .tab{padding:12px 18px;font-size:1rem}
+    .cap-mid{display:none}
+  }
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+<div id="toast"></div>
+
+<div class="wrap">
+  <header>
+    <h1>⚡ <span>Conservación de la Energía</span></h1>
+    <div class="big-formula">
+      <span class="c-em">E<sub>m</sub></span> = <span class="c-ec">E<sub>c</sub></span> + <span class="c-ep">E<sub>p</sub></span> = <span class="c-em">constante</span>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-view="sim">🎢 1. Montaña rusa</button>
+    <button class="tab" data-view="ex">🧠 2. Ejercicios</button>
+  </nav>
+
+  <!-- ===================== SIMULADOR ===================== -->
+  <section class="view active" id="view-sim">
+    <div class="concepts">
+      <div class="concept ep"><div class="emo">🏔️</div><div><b class="c-ep">E<sub>p</sub> = m·g·h</b><small>Energía por estar ALTO</small></div></div>
+      <div class="concept ec"><div class="emo">💨</div><div><b class="c-ec">E<sub>c</sub> = ½·m·v²</b><small>Energía por MOVERSE</small></div></div>
+      <div class="concept em"><div class="emo">⚖️</div><div><b class="c-em">E<sub>c</sub> + E<sub>p</sub> = E<sub>m</sub></b><small>¡Siempre igual! (sin rozamiento)</small></div></div>
+    </div>
+
+    <div class="simgrid">
+      <div class="card stage">
+        <div class="hint-bubble" id="hint">👆 ¡Arrastra la pelota!</div>
+        <canvas id="track"></canvas>
+        <div class="controls">
+          <button class="btn primary" id="playBtn">▶ Soltar</button>
+          <button class="btn" id="resetBtn">↺ Reiniciar</button>
+          <div class="ctrl">
+            <label>⚖️ Masa <output id="mOut">50 kg</output></label>
+            <input type="range" id="mSlider" min="1" max="100" step="1" value="50">
+          </div>
+          <div class="ctrl">
+            <label>📏 Altura de salida h₀ <output id="hOut">19,9 m</output></label>
+            <input type="range" id="hSlider" min="3" max="26" step="0.1" value="19.9">
+          </div>
+          <div class="ctrl" style="min-width:260px">
+            <label>🪐 Gravedad <output id="gOut">9,8 m/s²</output></label>
+            <div class="planets" id="planets">
+              <button class="planet active" data-g="9.8">🌍 Tierra</button>
+              <button class="planet" data-g="1.62">🌙 Luna</button>
+              <button class="planet" data-g="3.71">🔴 Marte</button>
+              <button class="planet" data-g="24.8">🟠 Júpiter</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card panel">
+        <div class="readouts">
+          <div class="readout"><div class="lbl">📏 ALTURA</div><div class="val c-ep" id="hVal">0</div><div class="sub">metros</div></div>
+          <div class="readout"><div class="lbl">🏎️ VELOCIDAD</div><div class="val c-ec" id="vVal">0</div><div class="sub" id="kmh">m/s</div></div>
+        </div>
+        <div class="ecards">
+          <div class="ecard ep" id="epCard"><div class="lbl">E<sub>p</sub></div><div class="val" id="epVal">0 J</div></div>
+          <div class="ecard ec" id="ecCard"><div class="lbl">E<sub>c</sub></div><div class="val" id="ecVal">0 J</div></div>
+          <div class="ecard em"><div class="lbl">E<sub>m</sub></div><div class="val" id="emVal">0 J</div></div>
+        </div>
+        <div>
+          <div class="stack"><div class="s-ep" id="sEp">Ep</div><div class="s-ec" id="sEc">Ec</div></div>
+          <div class="stack-cap"><span>🔵 Potencial</span><span class="cap-mid">la barra NUNCA cambia de tamaño 👀</span><span>Cinética 🟢</span></div>
+        </div>
+        <div class="formulas" id="formulas"></div>
+        <canvas id="hist"></canvas>
+        <div class="legend"><span><i style="background:var(--ep)"></i>E<sub>p</sub></span><span><i style="background:var(--ec)"></i>E<sub>c</sub></span><span><i style="background:var(--em)"></i>E<sub>m</sub></span></div>
+      </div>
+    </div>
+
+    <div class="card missions">
+      <h3>🎯 Misiones <span id="mCount" style="color:var(--em)">0/6</span></h3>
+      <div class="mlist" id="mlist"></div>
+      <div class="insight" id="insight">💡 Arriba ➜ mucha E<sub>p</sub>, poca E<sub>c</sub>. Abajo ➜ al revés. ¡Pero la suma no cambia!</div>
+    </div>
+  </section>
+
+  <!-- ===================== EJERCICIOS ===================== -->
+  <section class="view" id="view-ex">
+    <div class="method">
+      <span class="m">📋 Datos</span><span class="arrow">➜</span>
+      <span class="m">📍 Puntos A y B</span><span class="arrow">➜</span>
+      <span class="m">⚖️ E<sub>m</sub>(A) = E<sub>m</sub>(B)</span><span class="arrow">➜</span>
+      <span class="m">✏️ Despejar y calcular</span>
+    </div>
+    <div class="ex-nav" id="exNav"></div>
+    <div class="card">
+      <div class="ex-head">
+        <div><span class="tag" id="exTag"></span><h3 id="exTitle"></h3></div>
+        <div class="score" id="score">⭐ 0 · 🔥 0</div>
+      </div>
+      <div class="ex-body">
+        <div class="ex-fig" id="exFig"></div>
+        <div>
+          <p class="story" id="exStory"></p>
+          <div class="chips" id="exChips"></div>
+          <div class="question" id="exQ"></div>
+          <div class="answer-row">
+            <span id="exAsk"></span> =
+            <input id="exInput" inputmode="decimal" autocomplete="off" placeholder="?">
+            <span id="exUnit"></span>
+            <button class="btn purple" id="checkBtn">✔ Comprobar</button>
+          </div>
+          <div class="feedback" id="feedback"></div>
+        </div>
+      </div>
+      <div class="steps" id="steps"></div>
+      <div class="ex-actions">
+        <button class="btn orange" id="hintBtn">💡 Siguiente paso</button>
+        <button class="btn" id="allBtn">📖 Ver todo</button>
+        <button class="btn" id="newBtn">🎲 Otros números</button>
+        <button class="btn primary" id="nextBtn">Siguiente ejercicio ➜</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+/* ============ Utilidades ============ */
+const $ = s => document.querySelector(s);
+const nf = (n, d = 1) => Number(n).toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: d });
+const nfix = (n, d = 1) => Number(n).toLocaleString('es-ES', { minimumFractionDigits: d, maximumFractionDigits: d });
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+let toastTimer;
+function toast(msg) {
+  const t = $('#toast');
+  t.innerHTML = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* Confeti */
+const cf = $('#confetti'), cfx = cf.getContext('2d');
+let parts = [], cfRunning = false;
+function confetti(n = 120) {
+  cf.width = innerWidth; cf.height = innerHeight;
+  const cols = ['#3b82f6', '#10b981', '#8b5cf6', '#f59e0b', '#ec4899'];
+  for (let i = 0; i < n; i++) parts.push({
+    x: innerWidth / 2, y: innerHeight * 0.45,
+    vx: (Math.random() - .5) * 16, vy: -Math.random() * 14 - 4,
+    s: 6 + Math.random() * 6, c: cols[i % cols.length], r: Math.random() * 6, life: 110
+  });
+  if (!cfRunning) { cfRunning = true; requestAnimationFrame(cfLoop); }
+}
+function cfLoop() {
+  cfx.clearRect(0, 0, cf.width, cf.height);
+  parts.forEach(p => { p.vy += .35; p.x += p.vx; p.y += p.vy; p.r += .2; p.life--;
+    cfx.save(); cfx.translate(p.x, p.y); cfx.rotate(p.r); cfx.fillStyle = p.c;
+    cfx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); cfx.restore(); });
+  parts = parts.filter(p => p.life > 0);
+  if (parts.length) requestAnimationFrame(cfLoop); else { cfRunning = false; cfx.clearRect(0, 0, cf.width, cf.height); }
+}
+
+/* Tabs */
+document.querySelectorAll('.tab').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x === b));
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + b.dataset.view));
+  if (b.dataset.view === 'sim') resize();
+});
+
+/* ============ MONTAÑA RUSA ============ */
+// Puntos de control: picos y valles alternos (x, altura en metros)
+const TRACK = [[0, 20], [12, 2], [22, 14], [31, 4], [40, 11], [49, 1], [60, 8]];
+const XMAX = 60, YMAX = 27;
+
+function segIndex(x) {
+  for (let i = 0; i < TRACK.length - 1; i++) if (x <= TRACK[i + 1][0]) return i;
+  return TRACK.length - 2;
+}
+function hy(x) {
+  x = clamp(x, 0, XMAX);
+  const i = segIndex(x), [x0, y0] = TRACK[i], [x1, y1] = TRACK[i + 1];
+  const t = (x - x0) / (x1 - x0);
+  return y0 + (y1 - y0) * (1 - Math.cos(Math.PI * t)) / 2;
+}
+function dhy(x) {
+  x = clamp(x, 0, XMAX);
+  const i = segIndex(x), [x0, y0] = TRACK[i], [x1, y1] = TRACK[i + 1];
+  const t = (x - x0) / (x1 - x0);
+  return (y1 - y0) * Math.PI * Math.sin(Math.PI * t) / (2 * (x1 - x0));
+}
+
+const S = {
+  x: 0.8, v: 0, dir: 1, m: 50, g: 9.8, H0: 0,
+  playing: false, dragging: null, everDragged: false, massChanged: false,
+  hist: []
+};
+S.H0 = +hy(S.x).toFixed(1);
+S.x = findXAtOrBelow(S.x);
+
+function findXAtOrBelow(x) {
+  // si la pelota queda por encima del nivel de energía, la bajamos cuesta abajo
+  let guard = 0;
+  while (hy(x) > S.H0 + 1e-9 && guard++ < 5000) x += (dhy(x) > 0 ? -1 : 1) * 0.01;
+  return clamp(x, 0, XMAX);
+}
+
+const cv = $('#track'), cx = cv.getContext('2d');
+let W = 800, H = 400;
+const pad = { l: 34, r: 16, t: 16, b: 28 };
+const X = x => pad.l + x / XMAX * (W - pad.l - pad.r);
+const Y = y => H - pad.b - y / YMAX * (H - pad.t - pad.b);
+const invX = px => (px - pad.l) / (W - pad.l - pad.r) * XMAX;
+const invY = py => (H - pad.b - py) / (H - pad.t - pad.b) * YMAX;
+
+const hc = $('#hist'), hx = hc.getContext('2d');
+function resize() {
+  const dpr = window.devicePixelRatio || 1;
+  W = cv.clientWidth || 800;
+  H = clamp(W * 0.52, 280, 480);
+  cv.style.height = H + 'px';
+  cv.width = W * dpr; cv.height = H * dpr;
+  cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const hw = hc.clientWidth || 300;
+  hc.width = hw * dpr; hc.height = 120 * dpr;
+  hx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+addEventListener('resize', resize);
+
+function energies() {
+  const h = hy(S.x);
+  const ep = S.m * S.g * h;
+  const em = S.m * S.g * S.H0;
+  const ec = Math.max(0, em - ep);
+  const v = Math.sqrt(Math.max(0, 2 * S.g * (S.H0 - h)));
+  return { h, ep, ec, em, v };
+}
+
+function roundRect(c, x, y, w, h, r) {
+  c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r);
+  c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath();
+}
+
+function draw(E) {
+  // Cielo
+  const sky = cx.createLinearGradient(0, 0, 0, H);
+  sky.addColorStop(0, '#e0f2fe'); sky.addColorStop(1, '#f0fdf4');
+  cx.fillStyle = sky; cx.fillRect(0, 0, W, H);
+
+  // Rejilla de alturas
+  cx.font = '700 11px Nunito, sans-serif'; cx.textAlign = 'right'; cx.textBaseline = 'middle';
+  for (let y = 0; y <= 25; y += 5) {
+    cx.strokeStyle = 'rgba(100,116,139,.15)'; cx.lineWidth = 1;
+    cx.beginPath(); cx.moveTo(pad.l, Y(y)); cx.lineTo(W - pad.r, Y(y)); cx.stroke();
+    cx.fillStyle = '#94a3b8'; cx.fillText(y + ' m', pad.l - 4, Y(y));
+  }
+  // Suelo
+  cx.fillStyle = '#86efac'; cx.fillRect(0, Y(0), W, H - Y(0));
+  cx.fillStyle = '#4ade80'; cx.fillRect(0, Y(0), W, 4);
+
+  // Soportes
+  cx.strokeStyle = '#cbd5e1'; cx.lineWidth = 3;
+  for (let x = 1; x < XMAX; x += 2) {
+    cx.beginPath(); cx.moveTo(X(x), Y(0)); cx.lineTo(X(x), Y(hy(x))); cx.stroke();
+  }
+  // Vía
+  cx.lineCap = 'round'; cx.lineJoin = 'round';
+  const path = () => { cx.beginPath(); for (let x = 0; x <= XMAX + 1e-9; x += 0.2) { const px = X(x), py = Y(hy(x)); x === 0 ? cx.moveTo(px, py) : cx.lineTo(px, py); } };
+  path(); cx.strokeStyle = '#334155'; cx.lineWidth = 9; cx.stroke();
+  path(); cx.strokeStyle = '#64748b'; cx.lineWidth = 4; cx.stroke();
+
+  // Zonas prohibidas (por encima de h0)
+  cx.strokeStyle = 'rgba(239,68,68,.85)'; cx.lineWidth = 9;
+  cx.beginPath(); let on = false;
+  for (let x = 0; x <= XMAX + 1e-9; x += 0.1) {
+    const y = hy(x);
+    if (y > S.H0) { on ? cx.lineTo(X(x), Y(y)) : cx.moveTo(X(x), Y(y)); on = true; } else on = false;
+  }
+  cx.stroke();
+  // Topes de los extremos
+  cx.fillStyle = '#f59e0b';
+  [0, XMAX].forEach(x => { roundRect(cx, X(x) - 5, Y(hy(x)) - 26, 10, 26, 4); cx.fill(); });
+
+  // Línea de energía total
+  const ly = Y(S.H0);
+  cx.setLineDash([10, 7]); cx.strokeStyle = '#8b5cf6'; cx.lineWidth = 3;
+  cx.beginPath(); cx.moveTo(pad.l, ly); cx.lineTo(W - pad.r, ly); cx.stroke(); cx.setLineDash([]);
+  const lbl = `Energía total ➜ h₀ = ${nfix(S.H0)} m`;
+  cx.font = '900 13px Nunito, sans-serif'; const tw = cx.measureText(lbl).width;
+  cx.fillStyle = '#8b5cf6'; roundRect(cx, W - pad.r - tw - 52, ly - 13, tw + 16, 26, 13); cx.fill();
+  cx.fillStyle = '#fff'; cx.textAlign = 'left'; cx.fillText(lbl, W - pad.r - tw - 44, ly + 1);
+  // asa para arrastrar
+  cx.beginPath(); cx.arc(W - pad.r - 16, ly, 13, 0, 7); cx.fillStyle = '#8b5cf6'; cx.fill();
+  cx.fillStyle = '#fff'; cx.textAlign = 'center'; cx.fillText('⇕', W - pad.r - 16, ly + 1);
+
+  // Barras de energía en la posición de la pelota
+  const bx = X(S.x), by = Y(E.h), bw = 16, off = -34;
+  cx.globalAlpha = .85;
+  cx.fillStyle = '#3b82f6'; roundRect(cx, bx + off, by, bw, Y(0) - by, 4); cx.fill();
+  if (ly < by - 1) { cx.fillStyle = '#10b981'; roundRect(cx, bx + off, ly, bw, by - ly, 4); cx.fill(); }
+  cx.globalAlpha = 1;
+  cx.font = '900 12px Nunito, sans-serif'; cx.textAlign = 'right';
+  if (Y(0) - by > 18) { cx.fillStyle = '#1d4ed8'; cx.fillText('Ep', bx + off - 4, (by + Y(0)) / 2); }
+  if (by - ly > 18) { cx.fillStyle = '#047857'; cx.fillText('Ec', bx + off - 4, (by + ly) / 2); }
+
+  // Pelota (sobre la vía)
+  const d = dhy(S.x);
+  const tdx = X(1) - X(0), tdy = Y(d) - Y(0);
+  const tl = Math.hypot(tdx, tdy), ux = tdx / tl, uy = tdy / tl;
+  const nx = uy, ny = -ux; // normal hacia arriba
+  const R = 15;
+  const cxb = bx + nx * (R + 3), cyb = by + ny * (R + 3);
+
+  // Flecha de velocidad
+  const dir = S.playing ? Math.sign(S.v) || S.dir : S.dir;
+  if (E.v > 0.05) {
+    const len = clamp(E.v * 3.2, 14, 110);
+    const ax = cxb + ux * dir * (R + 4), ay = cyb + uy * dir * (R + 4);
+    const ex = ax + ux * dir * len, ey = ay + uy * dir * len;
+    cx.strokeStyle = '#10b981'; cx.lineWidth = 5; cx.beginPath(); cx.moveTo(ax, ay); cx.lineTo(ex, ey); cx.stroke();
+    const ang = Math.atan2(ey - ay, ex - ax);
+    cx.fillStyle = '#10b981'; cx.beginPath(); cx.moveTo(ex + Math.cos(ang) * 8, ey + Math.sin(ang) * 8);
+    cx.lineTo(ex + Math.cos(ang + 2.4) * 11, ey + Math.sin(ang + 2.4) * 11);
+    cx.lineTo(ex + Math.cos(ang - 2.4) * 11, ey + Math.sin(ang - 2.4) * 11); cx.fill();
+    cx.font = '900 13px Nunito, sans-serif'; cx.textAlign = 'center';
+    cx.fillText('v', ex + Math.cos(ang) * 18, ey + Math.sin(ang) * 18 - 8);
+  }
+
+  const grad = cx.createRadialGradient(cxb - 5, cyb - 6, 3, cxb, cyb, R);
+  grad.addColorStop(0, '#fda4af'); grad.addColorStop(1, '#e11d48');
+  cx.beginPath(); cx.arc(cxb, cyb, R, 0, 7); cx.fillStyle = grad; cx.fill();
+  cx.lineWidth = 2; cx.strokeStyle = '#9f1239'; cx.stroke();
+  // carita
+  const look = dir * 3;
+  cx.fillStyle = '#fff';
+  [-5, 5].forEach(o => { cx.beginPath(); cx.arc(cxb + o + look * .5, cyb - 3, 4, 0, 7); cx.fill(); });
+  cx.fillStyle = '#111';
+  [-5, 5].forEach(o => { cx.beginPath(); cx.arc(cxb + o + look, cyb - 3, 2, 0, 7); cx.fill(); });
+  cx.strokeStyle = '#111'; cx.lineWidth = 2;
+  if (E.v > 10) { cx.beginPath(); cx.arc(cxb + look * .5, cyb + 6, 3.5, 0, 7); cx.stroke(); }
+  else { cx.beginPath(); cx.arc(cxb + look * .5, cyb + 3, 5, .2 * Math.PI, .8 * Math.PI); cx.stroke(); }
+
+  // Etiqueta de altura
+  cx.setLineDash([3, 4]); cx.strokeStyle = 'rgba(59,130,246,.6)'; cx.lineWidth = 1.5;
+  cx.beginPath(); cx.moveTo(pad.l, by); cx.lineTo(bx + off, by); cx.stroke(); cx.setLineDash([]);
+  cx.font = '900 12px Nunito, sans-serif'; cx.textAlign = 'left'; cx.fillStyle = '#1d4ed8';
+  cx.fillText(`h = ${nfix(E.h)} m`, pad.l + 4, by - 9);
+}
+
+function drawHist(E) {
+  const w = hc.clientWidth, h = 120;
+  hx.clearRect(0, 0, w, h);
+  const hs = S.hist; if (hs.length < 2) return;
+  const max = Math.max(...hs.map(p => p.em)) * 1.12 || 1;
+  const px = i => 6 + i / 299 * (w - 12), py = v => h - 8 - v / max * (h - 16);
+  const line = (key, col, dash) => {
+    hx.setLineDash(dash || []); hx.strokeStyle = col; hx.lineWidth = 3; hx.beginPath();
+    hs.forEach((p, i) => i ? hx.lineTo(px(i), py(p[key])) : hx.moveTo(px(i), py(p[key]))); hx.stroke();
+  };
+  line('ep', '#3b82f6'); line('ec', '#10b981'); line('em', '#8b5cf6', [8, 5]); hx.setLineDash([]);
+}
+
+let lastPanel = 0;
+function updatePanel(E) {
+  $('#hVal').textContent = nfix(E.h);
+  $('#vVal').textContent = nfix(E.v);
+  $('#kmh').textContent = `m/s · ${nf(E.v * 3.6, 0)} km/h`;
+  $('#epVal').textContent = nf(E.ep, 0) + ' J';
+  $('#ecVal').textContent = nf(E.ec, 0) + ' J';
+  $('#emVal').textContent = nf(E.em, 0) + ' J';
+  const pe = E.em > 0 ? E.ep / E.em * 100 : 100;
+  $('#sEp').style.width = pe + '%'; $('#sEc').style.width = (100 - pe) + '%';
+  $('#sEp').textContent = pe > 14 ? Math.round(pe) + '%' : '';
+  $('#sEc').textContent = 100 - pe > 14 ? Math.round(100 - pe) + '%' : '';
+  $('#epCard').style.transform = `scale(${1 + .08 * pe / 100})`;
+  $('#ecCard').style.transform = `scale(${1 + .08 * (100 - pe) / 100})`;
+  const m = nf(S.m, 0), g = nf(S.g, 2);
+  $('#formulas').innerHTML =
+    `<div class="row"><span class="c-ep">E<sub>p</sub></span> = m·g·h = ${m}·${g}·${nfix(E.h)} = <b class="c-ep">${nf(E.ep, 0)} J</b></div>` +
+    `<div class="row"><span class="c-ec">E<sub>c</sub></span> = ½·m·v² = ½·${m}·${nfix(E.v)}² = <b class="c-ec">${nf(E.ec, 0)} J</b></div>` +
+    `<div class="row"><span class="c-em">E<sub>m</sub></span> = ${nf(E.ep, 0)} + ${nf(E.ec, 0)} = <b class="c-em">${nf(E.em, 0)} J</b></div>`;
+}
+
+/* Física: integración a lo largo de la vía + corrección por energía */
+function physics(dt) {
+  const n = 24, h = dt / n;
+  for (let i = 0; i < n; i++) {
+    const d = dhy(S.x), k = Math.sqrt(1 + d * d);
+    S.v += -S.g * d / k * h;
+    S.x += S.v / k * h;
+    if (S.x < 0) { S.x = -S.x; S.v = Math.abs(S.v); }
+    if (S.x > XMAX) { S.x = 2 * XMAX - S.x; S.v = -Math.abs(S.v); }
+    const e = 2 * S.g * (S.H0 - hy(S.x));
+    if (e > 0.05) S.v = (Math.sign(S.v) || 1) * Math.sqrt(e);
+  }
+  if (S.v) S.dir = Math.sign(S.v);
+}
+
+let prevT = performance.now();
+function loop(t) {
+  const dt = Math.min(0.05, (t - prevT) / 1000); prevT = t;
+  if (S.playing) physics(dt);
+  const E = energies();
+  if (S.playing || S.dragging) { S.hist.push({ ep: E.ep, ec: E.ec, em: E.em }); if (S.hist.length > 300) S.hist.shift(); }
+  draw(E);
+  drawHist(E);
+  if (t - lastPanel > 50) { updatePanel(E); lastPanel = t; }
+  checkMissions(E);
+  requestAnimationFrame(loop);
+}
+
+/* Interacción */
+function pointerPos(e) { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+let blockedMsgT = 0;
+function moveBallTo(tx) {
+  tx = clamp(tx, 0, XMAX);
+  const step = 0.04 * Math.sign(tx - S.x);
+  if (!step) return;
+  S.dir = Math.sign(step);
+  let x = S.x;
+  while (Math.abs(tx - x) > Math.abs(step)) {
+    const nxt = x + step;
+    if (hy(nxt) > S.H0 + 1e-9) {
+      if (performance.now() - blockedMsgT > 2500) { toast('🛑 ¡No tiene energía para subir más alto que h₀!'); blockedMsgT = performance.now(); }
+      S.x = x; return;
+    }
+    x = nxt;
+  }
+  if (hy(tx) <= S.H0 + 1e-9) x = tx;
+  S.x = x;
+}
+function setH0(v) {
+  S.H0 = clamp(+v, 3, 26);
+  $('#hSlider').value = S.H0;
+  $('#hOut').textContent = nfix(S.H0) + ' m';
+  S.x = findXAtOrBelow(S.x);
+}
+
+cv.addEventListener('pointerdown', e => {
+  const p = pointerPos(e), E = energies();
+  const bx = X(S.x), by = Y(E.h);
+  if (Math.hypot(p.x - bx, p.y - by) < 48) S.dragging = 'ball';
+  else if (Math.abs(p.y - Y(S.H0)) < 16) S.dragging = 'line';
+  else { S.dragging = 'ball'; }
+  stop();
+  cv.setPointerCapture(e.pointerId); cv.classList.add('dragging');
+  if (!S.everDragged) { S.everDragged = true; $('#hint').style.display = 'none'; }
+  handleDrag(p);
+});
+cv.addEventListener('pointermove', e => { if (S.dragging) handleDrag(pointerPos(e)); });
+const endDrag = () => { S.dragging = null; cv.classList.remove('dragging'); };
+cv.addEventListener('pointerup', endDrag); cv.addEventListener('pointercancel', endDrag);
+function handleDrag(p) {
+  if (S.dragging === 'ball') moveBallTo(invX(p.x));
+  else if (S.dragging === 'line') setH0(Math.round(invY(p.y) * 10) / 10);
+}
+
+function play() {
+  const E = energies();
+  S.v = S.dir * E.v;
+  S.playing = true; $('#playBtn').textContent = '⏸ Pausa';
+  $('#playBtn').classList.remove('primary'); $('#playBtn').classList.add('orange');
+}
+function stop() {
+  S.playing = false; $('#playBtn').textContent = '▶ Soltar';
+  $('#playBtn').classList.add('primary'); $('#playBtn').classList.remove('orange');
+}
+$('#playBtn').onclick = () => S.playing ? stop() : play();
+$('#resetBtn').onclick = () => { stop(); S.x = 0.8; S.dir = 1; S.hist = []; setH0(+hy(0.8).toFixed(1)); };
+$('#mSlider').oninput = e => { S.m = +e.target.value; $('#mOut').textContent = S.m + ' kg'; S.massChanged = true; };
+$('#hSlider').oninput = e => setH0(e.target.value);
+document.querySelectorAll('.planet').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.planet').forEach(x => x.classList.toggle('active', x === b));
+  S.g = +b.dataset.g; $('#gOut').textContent = nf(S.g, 2) + ' m/s²';
+  if (S.playing) { const E = energies(); S.v = (Math.sign(S.v) || 1) * E.v; }
+});
+
+/* Misiones */
+const MISSIONS = [
+  { t: '⬇️ Lleva la pelota al punto más bajo', ok: E => E.h < 1.3, tip: '💡 En el punto más bajo casi toda la energía es <b class="c-ec">cinética</b>: ¡máxima velocidad!' },
+  { t: '⚖️ Consigue que E<sub>c</sub> = E<sub>p</sub>', ok: E => E.em > 0 && E.ec > 0 && Math.abs(E.ec - E.ep) / E.em < 0.03, tip: '💡 Cuando E<sub>c</sub> = E<sub>p</sub>, la pelota está justo a <b>la mitad de h₀</b>. ¡Míralo!' },
+  { t: '▶️ Suelta la pelota y mira las barras', ok: () => S.playing, tip: '💡 Las barras cambian… pero la <b class="c-em">morada</b> (E<sub>m</sub>) es una línea recta. ¡Se conserva!' },
+  { t: '🌙 Viaja a la Luna y suelta la pelota', ok: () => S.playing && S.g === 1.62, tip: '💡 Con menos gravedad va más lenta, pero llega a la <b>misma altura</b>.' },
+  { t: '🚧 Haz que NO pase la 1ª colina (14 m)', ok: () => S.playing && S.H0 < 14 && S.x < 22, tip: '💡 Para subir a 14 m necesita E<sub>m</sub> ≥ m·g·14. Si no, ¡se da la vuelta!' },
+  { t: '🐘 Cambia la masa: ¿cambia la velocidad?', ok: () => S.massChanged, tip: '💡 ¡NO! v = √(2·g·Δh). <b>La masa se cancela</b>. Solo cambian los julios.' }
+];
+const done = new Set();
+$('#mlist').innerHTML = MISSIONS.map((m, i) => `<div class="mission" id="mi${i}"><div class="tick"></div><div>${m.t}</div></div>`).join('');
+function checkMissions(E) {
+  MISSIONS.forEach((m, i) => {
+    if (done.has(i) || !m.ok(E)) return;
+    done.add(i);
+    const el = $('#mi' + i); el.classList.add('done', 'pop'); el.querySelector('.tick').textContent = '✓';
+    $('#mCount').textContent = `${done.size}/${MISSIONS.length}`;
+    $('#insight').innerHTML = m.tip;
+    confetti(done.size === MISSIONS.length ? 220 : 60);
+    toast(done.size === MISSIONS.length ? '🏆 ¡Todas las misiones! Ahora a los ejercicios 🧠' : '✅ ¡Misión cumplida!');
+  });
+}
+
+resize();
+setH0(S.H0);
+requestAnimationFrame(loop);
+
+/* ============ EJERCICIOS ============ */
+const G = 9.8;
+const rI = (a, b) => Math.floor(a + Math.random() * (b - a + 1));
+const rD = (a, b, d = 1) => +(a + Math.random() * (b - a)).toFixed(d);
+const fr = (a, b) => `<span class="frac"><span>${a}</span><span>${b}</span></span>`;
+const sq = x => `√<span class="sq">${x}</span>`;
+const R = x => `<span class="res">${x}</span>`;
+const ep = s => `<span class="c-ep">${s}</span>`, ec = s => `<span class="c-ec">${s}</span>`;
+const EQ = `${ec('E<sub>c,A</sub>')} + ${ep('E<sub>p,A</sub>')} = ${ec('E<sub>c,B</sub>')} + ${ep('E<sub>p,B</sub>')}`;
+
+/* ---- Dibujos SVG ---- */
+const svgWrap = inner => `<svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg" font-family="Nunito, sans-serif" font-weight="900">
+  <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#10b981"/></marker>
+  <marker id="arb" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#3b82f6"/></marker></defs>
+  <rect x="0" y="196" width="320" height="24" fill="#86efac"/>${inner}</svg>`;
+const ptLabel = (x, y, t, c = '#8b5cf6') => `<circle cx="${x}" cy="${y}" r="7" fill="${c}"/><text x="${x}" y="${y - 12}" text-anchor="middle" fill="${c}" font-size="15">${t}</text>`;
+
+function svgCaida(d) {
+  return svgWrap(`<rect x="30" y="40" width="70" height="156" fill="#cbd5e1" rx="4"/>
+  ${[60, 95, 130, 165].map(y => `<rect x="42" y="${y}" width="18" height="18" fill="#93c5fd"/><rect x="70" y="${y}" width="18" height="18" fill="#93c5fd"/>`).join('')}
+  <circle cx="140" cy="40" r="13" fill="#ef4444"/><path d="M140,27 q4,-8 10,-6" stroke="#15803d" stroke-width="3" fill="none"/>
+  <line x1="140" y1="60" x2="140" y2="180" stroke="#10b981" stroke-width="4" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+  <line x1="200" y1="40" x2="200" y2="196" stroke="#3b82f6" stroke-width="3" marker-end="url(#arb)" marker-start="url(#arb)"/>
+  <text x="210" y="122" fill="#3b82f6" font-size="17">h = ${nf(d.h)} m</text>
+  <text x="150" y="30" fill="#8b5cf6" font-size="15">A</text><text x="150" y="192" fill="#8b5cf6" font-size="15">B</text>
+  <text x="160" y="170" fill="#10b981" font-size="17">v = ?</text>`);
+}
+function svgLanz(d) {
+  return svgWrap(`<circle cx="120" cy="182" r="13" fill="#f97316"/><path d="M107,182 h26 M120,169 v26" stroke="#9a3412" stroke-width="1.5"/>
+  <line x1="120" y1="165" x2="120" y2="120" stroke="#10b981" stroke-width="5" marker-end="url(#ar)"/>
+  <text x="130" y="145" fill="#10b981" font-size="16">v₀ = ${nf(d.v0)} m/s</text>
+  <circle cx="120" cy="40" r="13" fill="none" stroke="#f97316" stroke-width="3" stroke-dasharray="4 4"/>
+  <text x="140" y="44" fill="#64748b" font-size="14">v = 0 (se para)</text>
+  <line x1="60" y1="40" x2="60" y2="196" stroke="#3b82f6" stroke-width="3" marker-end="url(#arb)" marker-start="url(#arb)"/>
+  <text x="18" y="122" fill="#3b82f6" font-size="17">h = ?</text>
+  <text x="100" y="187" fill="#8b5cf6" font-size="15">A</text><text x="100" y="44" fill="#8b5cf6" font-size="15">B</text>`);
+}
+function svgCoaster(d, o) {
+  // o: {aLabel, bLabel, bPeak}
+  const p = 'M10,40 C70,40 80,186 140,186 S210,90 250,90 S300,130 315,130';
+  return svgWrap(`<path d="${p}" stroke="#334155" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <rect x="14" y="20" width="30" height="16" rx="5" fill="#e11d48"/><circle cx="21" cy="38" r="4" fill="#111"/><circle cx="37" cy="38" r="4" fill="#111"/>
+  ${ptLabel(28, 40, 'A')}${ptLabel(250, 90, 'B')}
+  <line x1="4" y1="40" x2="4" y2="196" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#arb)"/>
+  <text x="58" y="60" fill="#3b82f6" font-size="14">${o.aLabel}</text>
+  <line x1="300" y1="90" x2="300" y2="196" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#arb)" marker-start="url(#arb)"/>
+  <text x="250" y="66" text-anchor="middle" fill="#10b981" font-size="14">${o.bTop || ''}</text>
+  <text x="296" y="150" text-anchor="end" fill="#3b82f6" font-size="14">${o.bLabel}</text>`);
+}
+function svgLoop(d) {
+  return svgWrap(`<path d="M10,30 C60,30 80,196 150,196 L215,196" stroke="#334155" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <circle cx="235" cy="136" r="60" stroke="#334155" stroke-width="7" fill="none"/>
+  <line x1="235" y1="136" x2="295" y2="136" stroke="#8b5cf6" stroke-width="3"/><text x="252" y="130" fill="#8b5cf6" font-size="16">R</text>
+  <circle cx="22" cy="20" r="10" fill="#e11d48"/>
+  ${ptLabel(235, 76, 'B')}
+  <line x1="4" y1="30" x2="4" y2="196" stroke="#3b82f6" stroke-width="3" marker-end="url(#arb)" marker-start="url(#arb)"/>
+  <text x="12" y="120" fill="#3b82f6" font-size="17">h = ?</text>
+  <text x="40" y="22" fill="#8b5cf6" font-size="15">A</text>
+  <text x="235" y="58" text-anchor="middle" fill="#10b981" font-size="13">¡no debe caer!</text>
+  <text x="190" y="216" fill="#334155" font-size="13">R = ${nf(d.R)} m</text>`);
+}
+function svgSpring(d) {
+  let z = 'M14,170'; for (let i = 0; i < 8; i++) z += ` L${20 + i * 8},${i % 2 ? 160 : 180}`; z += ' L86,170';
+  return svgWrap(`<rect x="4" y="140" width="10" height="56" fill="#64748b"/>
+  <path d="${z}" stroke="#f59e0b" stroke-width="4" fill="none"/>
+  <rect x="86" y="152" width="36" height="36" rx="5" fill="#8b5cf6"/><text x="104" y="176" text-anchor="middle" fill="#fff" font-size="14">m</text>
+  <path d="M14,196 L150,196 L300,70 L320,70" stroke="#334155" stroke-width="6" fill="none"/>
+  <line x1="40" y1="130" x2="86" y2="130" stroke="#f59e0b" stroke-width="2.5" marker-end="url(#arb)" marker-start="url(#arb)"/>
+  <text x="34" y="122" fill="#d97706" font-size="14">x = ${nf(d.x, 2)} m</text>
+  ${ptLabel(104, 196, 'A')}${ptLabel(270, 95, 'B')}
+  <line x1="310" y1="70" x2="310" y2="196" stroke="#3b82f6" stroke-width="3" marker-end="url(#arb)" marker-start="url(#arb)"/>
+  <text x="304" y="150" text-anchor="end" fill="#3b82f6" font-size="17">h = ?</text>`);
+}
+function svgPend(d) {
+  const L = 150, th = d.th * Math.PI / 180, px = 160, py = 20;
+  const bx = px - L * Math.sin(th), by = py + L * Math.cos(th);
+  return svgWrap(`<rect x="100" y="12" width="120" height="8" fill="#64748b"/>
+  <line x1="${px}" y1="${py}" x2="${px}" y2="${py + L}" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5 5"/>
+  <line x1="${px}" y1="${py}" x2="${bx}" y2="${by}" stroke="#334155" stroke-width="3"/>
+  <path d="M${px},${py + 40} A40,40 0 0,1 ${px - 40 * Math.sin(th)},${py + 40 * Math.cos(th)}" stroke="#f59e0b" stroke-width="3" fill="none"/>
+  <text x="${px - 22}" y="${py + 58}" fill="#d97706" font-size="15">θ</text>
+  <text x="${(px + bx) / 2 - 22}" y="${(py + by) / 2}" fill="#334155" font-size="15">L</text>
+  <circle cx="${bx}" cy="${by}" r="13" fill="#e11d48"/><text x="${bx}" y="${by - 20}" text-anchor="middle" fill="#8b5cf6" font-size="15">A</text>
+  <circle cx="${px}" cy="${py + L}" r="13" fill="none" stroke="#e11d48" stroke-width="3" stroke-dasharray="4 3"/>
+  <text x="${px}" y="${py + L + 32}" text-anchor="middle" fill="#8b5cf6" font-size="15">B</text>
+  <line x1="${px + 18}" y1="${py + L}" x2="${px + 70}" y2="${py + L}" stroke="#10b981" stroke-width="4" marker-end="url(#ar)"/>
+  <text x="${px + 78}" y="${py + L + 5}" fill="#10b981" font-size="16">v = ?</text>
+  <line x1="${bx - 30}" y1="${by}" x2="${bx - 30}" y2="${py + L}" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#arb)" marker-start="url(#arb)"/>
+  <text x="${bx - 38}" y="${(by + py + L) / 2 + 5}" text-anchor="end" fill="#3b82f6" font-size="15">h</text>`);
+}
+
+/* ---- Ejercicios ---- */
+const EX = [
+  {
+    title: '🍎 Caída libre', kind: 'vel',
+    gen: () => ({ m: rI(1, 5), h: rI(5, 45) }),
+    story: d => `Una manzana de <b>${d.m} kg</b> cae desde una altura de <b>${d.h} m</b>. Parte del reposo.`,
+    chips: d => [['m', d.m + ' kg'], ['h', d.h + ' m'], ['v<sub>A</sub>', '0', 1], ['g', '9,8 m/s²']],
+    q: '¿Con qué velocidad llega al suelo?', ask: 'v<sub>B</sub>', unit: 'm/s',
+    ans: d => Math.sqrt(2 * G * d.h),
+    svg: svgCaida,
+    steps: d => [
+      ['📋', 'Datos', `m = ${d.m} kg · h = ${d.h} m · v<sub>A</sub> = 0 · g = 9,8 m/s²<br>Nos piden: <b>v<sub>B</sub></b>`],
+      ['📍', 'Puntos A y B', `A = arriba ➜ h<sub>A</sub> = ${d.h} m, v<sub>A</sub> = 0<br>B = suelo ➜ h<sub>B</sub> = 0 <span class="note">(nivel cero)</span>`],
+      ['⚖️', 'Conservo la energía', `${EQ}<br>0 + <span class="cancel">m</span>·g·h<sub>A</sub> = ½·<span class="cancel">m</span>·v<sub>B</sub>² + 0 <span class="note">➜ ¡la masa se va!</span>`],
+      ['✏️', 'Despejo y calculo', `v<sub>B</sub> = ${sq('2·g·h<sub>A</sub>')} = ${sq(`2·9,8·${d.h}`)} = ${R(nf(Math.sqrt(2 * G * d.h), 2) + ' m/s')}`]
+    ]
+  },
+  {
+    title: '🏀 Lanzamiento vertical', kind: 'alt',
+    gen: () => ({ m: rD(0.2, 0.8, 1), v0: rI(6, 25) }),
+    story: d => `Lanzas una pelota de <b>${nf(d.m)} kg</b> hacia arriba con <b>${d.v0} m/s</b>.`,
+    chips: d => [['m', nf(d.m) + ' kg'], ['v₀', d.v0 + ' m/s'], ['v<sub>B</sub>', '0', 1], ['g', '9,8 m/s²']],
+    q: '¿Qué altura máxima alcanza?', ask: 'h<sub>máx</sub>', unit: 'm',
+    ans: d => d.v0 ** 2 / (2 * G),
+    svg: svgLanz,
+    steps: d => [
+      ['📋', 'Datos', `m = ${nf(d.m)} kg · v₀ = ${d.v0} m/s · g = 9,8 m/s²<br>Nos piden: <b>h<sub>máx</sub></b>`],
+      ['📍', 'Puntos A y B', `A = mano ➜ h<sub>A</sub> = 0, v<sub>A</sub> = ${d.v0} m/s<br>B = arriba del todo ➜ <b>v<sub>B</sub> = 0</b> <span class="note">(ahí se para)</span>`],
+      ['⚖️', 'Conservo la energía', `${EQ}<br>½·<span class="cancel">m</span>·v₀² + 0 = 0 + <span class="cancel">m</span>·g·h`],
+      ['✏️', 'Despejo y calculo', `h = ${fr('v₀²', '2·g')} = ${fr(`${d.v0}²`, '2·9,8')} = ${R(nf(d.v0 ** 2 / (2 * G), 2) + ' m')}`]
+    ]
+  },
+  {
+    title: '🎢 Montaña rusa: de A a B', kind: 'vel',
+    gen: () => { const hA = rI(20, 45); return { m: rI(3, 8) * 100, hA, hB: rI(4, hA - 6) }; },
+    story: d => `Un carrito de <b>${d.m} kg</b> sale del reposo en A. Sin rozamiento.`,
+    chips: d => [['m', d.m + ' kg'], ['h<sub>A</sub>', d.hA + ' m'], ['v<sub>A</sub>', '0', 1], ['h<sub>B</sub>', d.hB + ' m']],
+    q: '¿Qué velocidad tiene en B?', ask: 'v<sub>B</sub>', unit: 'm/s',
+    ans: d => Math.sqrt(2 * G * (d.hA - d.hB)),
+    svg: d => svgCoaster(d, { aLabel: `hA = ${d.hA} m`, bLabel: `hB = ${d.hB} m`, bTop: 'v = ?' }),
+    steps: d => [
+      ['📋', 'Datos', `m = ${d.m} kg · h<sub>A</sub> = ${d.hA} m · v<sub>A</sub> = 0 · h<sub>B</sub> = ${d.hB} m<br>Nos piden: <b>v<sub>B</sub></b>`],
+      ['📍', 'Puntos A y B', `A = salida (reposo). B = el punto que nos preguntan.<br><span class="note">Nivel cero: el suelo.</span>`],
+      ['⚖️', 'Conservo la energía', `${EQ}<br>0 + <span class="cancel">m</span>·g·h<sub>A</sub> = ½·<span class="cancel">m</span>·v<sub>B</sub>² + <span class="cancel">m</span>·g·h<sub>B</sub>`],
+      ['✏️', 'Despejo y calculo', `v<sub>B</sub> = ${sq('2·g·(h<sub>A</sub> − h<sub>B</sub>)')} = ${sq(`2·9,8·(${d.hA} − ${d.hB})`)} = ${R(nf(Math.sqrt(2 * G * (d.hA - d.hB)), 2) + ' m/s')}`]
+    ]
+  },
+  {
+    title: '🎢 ¿Hasta dónde sube?', kind: 'alt',
+    gen: () => ({ m: rI(2, 6) * 100, hA: rI(4, 15), vA: rI(6, 16) }),
+    story: d => `Un carrito de <b>${d.m} kg</b> pasa por A a <b>${d.vA} m/s</b>. Sin rozamiento.`,
+    chips: d => [['m', d.m + ' kg'], ['h<sub>A</sub>', d.hA + ' m'], ['v<sub>A</sub>', d.vA + ' m/s'], ['v<sub>B</sub>', '0', 1]],
+    q: '¿Qué altura máxima puede alcanzar?', ask: 'h<sub>B</sub>', unit: 'm',
+    ans: d => d.hA + d.vA ** 2 / (2 * G),
+    svg: d => svgCoaster(d, { aLabel: `hA = ${d.hA} m, vA = ${d.vA} m/s`, bLabel: 'hB = ?', bTop: 'v = 0' }),
+    steps: d => [
+      ['📋', 'Datos', `m = ${d.m} kg · h<sub>A</sub> = ${d.hA} m · v<sub>A</sub> = ${d.vA} m/s<br>Nos piden: <b>h<sub>B</sub></b> (altura máxima)`],
+      ['📍', 'Puntos A y B', `A = donde conocemos todo.<br>B = punto más alto ➜ <b>v<sub>B</sub> = 0</b>`],
+      ['⚖️', 'Conservo la energía', `${EQ}<br>½·<span class="cancel">m</span>·v<sub>A</sub>² + <span class="cancel">m</span>·g·h<sub>A</sub> = 0 + <span class="cancel">m</span>·g·h<sub>B</sub>`],
+      ['✏️', 'Despejo y calculo', `h<sub>B</sub> = h<sub>A</sub> + ${fr('v<sub>A</sub>²', '2·g')} = ${d.hA} + ${fr(`${d.vA}²`, '2·9,8')} = ${R(nf(d.hA + d.vA ** 2 / (2 * G), 2) + ' m')}`]
+    ]
+  },
+  {
+    title: '🎢 ¿A qué altura va a esa velocidad?', kind: 'alt',
+    gen: () => {
+      const hA = rI(10, 30), vA = rI(3, 10), vmax = Math.sqrt(vA * vA + 2 * G * hA);
+      return { m: rI(2, 6) * 100, hA, vA, vB: rI(vA + 2, Math.floor(vmax) - 1) };
+    },
+    story: d => `Un carrito pasa por A a <b>${d.vA} m/s</b>. Baja y en un punto B lleva <b>${d.vB} m/s</b>.`,
+    chips: d => [['m', d.m + ' kg'], ['h<sub>A</sub>', d.hA + ' m'], ['v<sub>A</sub>', d.vA + ' m/s'], ['v<sub>B</sub>', d.vB + ' m/s']],
+    q: '¿A qué altura está el punto B?', ask: 'h<sub>B</sub>', unit: 'm',
+    ans: d => d.hA + (d.vA ** 2 - d.vB ** 2) / (2 * G),
+    svg: d => svgCoaster(d, { aLabel: `hA = ${d.hA} m, vA = ${d.vA} m/s`, bLabel: 'hB = ?', bTop: `v = ${d.vB} m/s` }),
+    steps: d => [
+      ['📋', 'Datos', `h<sub>A</sub> = ${d.hA} m · v<sub>A</sub> = ${d.vA} m/s · v<sub>B</sub> = ${d.vB} m/s<br>Nos piden: <b>h<sub>B</sub></b>`],
+      ['📍', 'Puntos A y B', `A = primer punto (lo sabemos todo).<br>B = donde v = ${d.vB} m/s`],
+      ['⚖️', 'Conservo la energía', `${EQ}<br>½·v<sub>A</sub>² + g·h<sub>A</sub> = ½·v<sub>B</sub>² + g·h<sub>B</sub> <span class="note">(ya sin m)</span>`],
+      ['✏️', 'Despejo y calculo', `h<sub>B</sub> = h<sub>A</sub> + ${fr('v<sub>A</sub>² − v<sub>B</sub>²', '2·g')} = ${d.hA} + ${fr(`${d.vA}² − ${d.vB}²`, '2·9,8')} = ${R(nf(d.hA + (d.vA ** 2 - d.vB ** 2) / (2 * G), 2) + ' m')}`]
+    ]
+  },
+  {
+    title: '🌀 El rizo (loop)', kind: 'alt',
+    gen: () => ({ R: rD(2, 9, 1), m: rI(1, 5) }),
+    story: d => `Una bola sale del reposo y entra en un rizo de radio <b>${nf(d.R)} m</b>. Sin rozamiento.`,
+    chips: d => [['R', nf(d.R) + ' m'], ['m', d.m + ' kg'], ['v<sub>A</sub>', '0', 1], ['g', '9,8 m/s²']],
+    q: '¿Altura MÍNIMA para dar la vuelta sin caerse?', ask: 'h<sub>mín</sub>', unit: 'm',
+    ans: d => 2.5 * d.R,
+    svg: svgLoop,
+    steps: d => [
+      ['📋', 'Datos', `R = ${nf(d.R)} m · v<sub>A</sub> = 0<br>Nos piden: <b>h mínima</b>`],
+      ['📍', 'Puntos A y B', `A = salida ➜ h<sub>A</sub> = h, v<sub>A</sub> = 0<br>B = lo más alto del rizo ➜ <b>h<sub>B</sub> = 2R</b>`],
+      ['🎯', 'Condición en B (dinámica)', `Justo sin caerse ➜ Normal = 0. Solo el peso hace de fuerza centrípeta:<br>m·g = m·${fr('v<sub>B</sub>²', 'R')} ➜ <b>v<sub>B</sub>² = g·R</b>`],
+      ['⚖️', 'Conservo la energía', `${EQ}<br>0 + <span class="cancel">m</span>·g·h = ½·<span class="cancel">m</span>·(g·R) + <span class="cancel">m</span>·g·2R`],
+      ['✏️', 'Despejo y calculo', `<span class="cancel">g</span>·h = ½·<span class="cancel">g</span>·R + 2·<span class="cancel">g</span>·R ➜ h = 2,5·R = 2,5·${nf(d.R)} = ${R(nf(2.5 * d.R, 2) + ' m')}`]
+    ]
+  },
+  {
+    title: '🧲 Muelle (resorte)', kind: 'alt',
+    gen: () => ({ k: rI(2, 9) * 100, x: rD(0.1, 0.4, 2), m: rD(0.5, 2, 1) }),
+    story: d => `Un bloque de <b>${nf(d.m)} kg</b> comprime <b>${nf(d.x, 2)} m</b> un muelle de <b>k = ${d.k} N/m</b>. Al soltarlo sube por una rampa.`,
+    chips: d => [['m', nf(d.m) + ' kg'], ['k', d.k + ' N/m'], ['x', nf(d.x, 2) + ' m'], ['v<sub>B</sub>', '0', 1]],
+    q: '¿Qué altura alcanza el bloque?', ask: 'h', unit: 'm',
+    ans: d => d.k * d.x ** 2 / (2 * d.m * G),
+    svg: svgSpring,
+    steps: d => [
+      ['📋', 'Datos', `m = ${nf(d.m)} kg · k = ${d.k} N/m · x = ${nf(d.x, 2)} m<br>Nos piden: <b>h</b><br><span class="note">Nueva energía: <b>E<sub>p,elástica</sub> = ½·k·x²</b></span>`],
+      ['📍', 'Puntos A y B', `A = muelle comprimido ➜ v<sub>A</sub> = 0, h<sub>A</sub> = 0<br>B = arriba de la rampa ➜ v<sub>B</sub> = 0`],
+      ['⚖️', 'Conservo la energía', `E<sub>elástica,A</sub> = ${ep('E<sub>p,B</sub>')}<br>½·k·x² = m·g·h <span class="note">(aquí la masa NO se cancela)</span>`],
+      ['✏️', 'Despejo y calculo', `h = ${fr('k·x²', '2·m·g')} = ${fr(`${d.k}·${nf(d.x, 2)}²`, `2·${nf(d.m)}·9,8`)} = ${R(nf(d.k * d.x ** 2 / (2 * d.m * G), 3) + ' m')}`]
+    ]
+  },
+  {
+    title: '🕰️ Péndulo', kind: 'vel',
+    gen: () => ({ L: rD(0.5, 3, 1), th: rI(4, 14) * 5 }),
+    story: d => `Un péndulo de <b>${nf(d.L)} m</b> se suelta desde <b>${d.th}°</b> con la vertical.`,
+    chips: d => [['L', nf(d.L) + ' m'], ['θ', d.th + '°'], ['v<sub>A</sub>', '0', 1], ['g', '9,8 m/s²']],
+    q: '¿Velocidad en el punto más bajo?', ask: 'v<sub>B</sub>', unit: 'm/s',
+    ans: d => Math.sqrt(2 * G * d.L * (1 - Math.cos(d.th * Math.PI / 180))),
+    svg: svgPend,
+    steps: d => {
+      const h = d.L * (1 - Math.cos(d.th * Math.PI / 180));
+      return [
+        ['📋', 'Datos', `L = ${nf(d.L)} m · θ = ${d.th}° · v<sub>A</sub> = 0<br>Nos piden: <b>v<sub>B</sub></b>`],
+        ['📐', 'Altura (geometría)', `h = L − L·cos θ = L·(1 − cos θ)<br>h = ${nf(d.L)}·(1 − cos ${d.th}°) = <b>${nf(h, 3)} m</b>`],
+        ['⚖️', 'Conservo la energía', `${EQ}<br>0 + <span class="cancel">m</span>·g·h = ½·<span class="cancel">m</span>·v<sub>B</sub>² + 0`],
+        ['✏️', 'Despejo y calculo', `v<sub>B</sub> = ${sq('2·g·h')} = ${sq(`2·9,8·${nf(h, 3)}`)} = ${R(nf(Math.sqrt(2 * G * h), 2) + ' m/s')}`]
+      ];
+    }
+  }
+];
+
+const ST = { i: 0, d: null, shown: 0, solved: new Set(), stars: 0, streak: 0, attempted: false, gotIt: false };
+
+function renderNav() {
+  $('#exNav').innerHTML = EX.map((e, i) =>
+    `<button class="ex-chip ${i === ST.i ? 'active' : ''} ${ST.solved.has(i) ? 'solved' : ''}" data-i="${i}">${ST.solved.has(i) ? '✅' : i + 1} ${e.title.split(' ')[0]}</button>`).join('');
+  document.querySelectorAll('.ex-chip').forEach(b => b.onclick = () => loadEx(+b.dataset.i));
+}
+function loadEx(i, keepData) {
+  ST.i = i; const e = EX[i];
+  if (!keepData) ST.d = e.gen();
+  ST.shown = 0; ST.attempted = false; ST.gotIt = false;
+  const d = ST.d;
+  $('#exTitle').textContent = e.title;
+  $('#exTag').className = 'tag ' + e.kind;
+  $('#exTag').textContent = e.kind === 'vel' ? '🏎️ Hallar velocidad' : '📏 Hallar altura';
+  $('#exFig').innerHTML = e.svg(d);
+  $('#exStory').innerHTML = e.story(d);
+  $('#exChips').innerHTML = e.chips(d).map(([k, v, z]) => `<span class="chip ${z ? 'zero' : ''}">${k} = ${v}</span>`).join('');
+  $('#exQ').innerHTML = '❓ ' + e.q;
+  $('#exAsk').innerHTML = e.ask; $('#exUnit').textContent = e.unit;
+  const inp = $('#exInput'); inp.value = ''; inp.className = '';
+  $('#feedback').textContent = ''; $('#feedback').className = 'feedback';
+  $('#steps').innerHTML = '';
+  $('#hintBtn').disabled = false; $('#hintBtn').style.opacity = 1;
+  renderNav();
+}
+function showStep() {
+  const steps = EX[ST.i].steps(ST.d);
+  if (ST.shown >= steps.length) return;
+  const [ic, t, html] = steps[ST.shown];
+  const el = document.createElement('div');
+  el.className = 'step';
+  el.innerHTML = `<div class="num">${ic}</div><div><h4>Paso ${ST.shown + 1}: ${t}</h4><div class="math">${html}</div></div>`;
+  $('#steps').appendChild(el);
+  ST.shown++;
+  if (ST.shown >= steps.length) { $('#hintBtn').disabled = true; $('#hintBtn').style.opacity = .5; }
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+function check() {
+  const e = EX[ST.i], inp = $('#exInput'), fb = $('#feedback');
+  const val = parseFloat(inp.value.replace(',', '.'));
+  if (isNaN(val)) { fb.className = 'feedback no'; fb.textContent = '✍️ Escribe un número'; return; }
+  const ans = e.ans(ST.d), err = Math.abs(val - ans) / Math.abs(ans);
+  inp.classList.remove('good', 'badi'); void inp.offsetWidth;
+  if (err < 0.02 || Math.abs(val - ans) < 0.02) {
+    inp.classList.add('good'); fb.className = 'feedback ok';
+    fb.innerHTML = `🎉 ¡Correcto! ${e.ask} = ${nf(ans, 2)} ${e.unit}`;
+    if (!ST.gotIt) {
+      ST.gotIt = true;
+      if (!ST.attempted && ST.shown < EX[ST.i].steps(ST.d).length) ST.streak++; else ST.streak = 0;
+      ST.stars += ST.shown === 0 ? 3 : ST.shown <= 2 ? 2 : 1;
+      ST.solved.add(ST.i);
+      $('#score').textContent = `⭐ ${ST.stars} · 🔥 ${ST.streak}`;
+      renderNav(); confetti();
+    }
+  } else {
+    ST.attempted = true;
+    inp.classList.add('badi'); fb.className = 'feedback no';
+    if (Math.abs(val - ans * ans) / (ans * ans) < 0.03) fb.textContent = '🤏 ¡Casi! ¿Olvidaste la raíz cuadrada √?';
+    else if (Math.abs(val * val - ans) / ans < 0.03) fb.textContent = '🤏 ¡Casi! Aquí no hace falta la raíz.';
+    else if (err < 0.15) fb.textContent = '🔍 ¡Muy cerca! Revisa redondeos o la resta.';
+    else { fb.textContent = '❌ No es eso. Te doy una pista 👇'; showStep(); }
+  }
+}
+$('#checkBtn').onclick = check;
+$('#exInput').addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
+$('#hintBtn').onclick = showStep;
+$('#allBtn').onclick = () => { while (ST.shown < EX[ST.i].steps(ST.d).length) showStep(); };
+$('#newBtn').onclick = () => loadEx(ST.i);
+$('#nextBtn').onclick = () => loadEx((ST.i + 1) % EX.length);
+loadEx(0);
+</script>
+</body>
+</html>
