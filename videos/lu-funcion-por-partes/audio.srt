@@ -1,0 +1,436 @@
+1
+00:00:01,000 --> 00:00:03,100
+hola Lu te voy a pasar
+
+2
+00:00:03,300 --> 00:00:05,366
+estos videos para que entiendas un poquito mejor
+
+3
+00:00:05,600 --> 00:00:07,400
+cómo es que nosotros vamos a trabajar
+
+4
+00:00:08,300 --> 00:00:09,866
+esta es resolución de problemas
+
+5
+00:00:10,366 --> 00:00:12,200
+o ese tipo de problemas a ver
+
+6
+00:00:12,666 --> 00:00:13,766
+lo primero es entender
+
+7
+00:00:14,266 --> 00:00:16,133
+que esta función que te están dando
+
+8
+00:00:16,366 --> 00:00:17,600
+está partido en tres
+
+9
+00:00:18,000 --> 00:00:19,733
+es como si vas a tener que resolver
+
+10
+00:00:20,133 --> 00:00:21,766
+tres funciones en una sola
+
+11
+00:00:22,600 --> 00:00:24,966
+vas a hacer como un collage algo así como haces
+
+12
+00:00:25,133 --> 00:00:25,933
+con las fotos
+
+13
+00:00:26,466 --> 00:00:28,400
+eh vamos a unir las tres funciones
+
+14
+00:00:28,666 --> 00:00:29,700
+en una sola función
+
+15
+00:00:29,900 --> 00:00:33,733
+como te dije como siento un collage entonces primero
+
+16
+00:00:34,400 --> 00:00:36,500
+vamos a ver la función tres t
+
+17
+00:00:36,866 --> 00:00:37,800
+imagínate que no hay
+
+18
+00:00:37,933 --> 00:00:38,666
+absolutamente nada
+
+19
+00:00:38,666 --> 00:00:41,366
+y nos quedamos con la primera línea la función tres t
+
+20
+00:00:42,166 --> 00:00:45,133
+en esta función tres t para poder graficar
+
+21
+00:00:45,666 --> 00:00:49,133
+este tipo de funciones eh ojo son funciones lineales
+
+22
+00:00:49,566 --> 00:00:51,333
+porque el t no tiene exponente
+
+23
+00:00:51,566 --> 00:00:53,400
+ni cuadrado ni cúbico ni nada
+
+24
+00:00:54,166 --> 00:00:55,500
+entonces para graficar
+
+25
+00:00:55,600 --> 00:00:58,166
+estas funciones lineales lo que nosotros hacemos es
+
+26
+00:00:58,800 --> 00:01:01,000
+tabular y cómo tabulamos
+
+27
+00:01:01,466 --> 00:01:03,900
+fácil tabular significa que la función
+
+28
+00:01:04,700 --> 00:01:07,666
+tú vas a inventarte dos valores de t cualquiera
+
+29
+00:01:08,100 --> 00:01:09,666
+y vas a hallar este
+
+30
+00:01:10,200 --> 00:01:13,866
+los los valores del del i griega no de de la función
+
+31
+00:01:14,600 --> 00:01:15,400
+entonces
+
+32
+00:01:15,766 --> 00:01:19,866
+tenemos la función f de t es igual a tres por t
+
+33
+00:01:20,466 --> 00:01:24,800
+por ejemplo cuando t vale uno la función vale tres
+
+34
+00:01:25,166 --> 00:01:27,866
+ya tenemos el primer punto 1,3
+
+35
+00:01:28,566 --> 00:01:29,700
+cuando t vale dos
+
+36
+00:01:30,100 --> 00:01:32,900
+la función es 6 ya tenemos el segundo punto
+
+37
+00:01:33,766 --> 00:01:35,766
+2,6 entonces
+
+38
+00:01:35,933 --> 00:01:38,733
+lo gráficamos cómo se grafica una función lineal
+
+39
+00:01:39,300 --> 00:01:40,533
+pones los dos puntos
+
+40
+00:01:40,733 --> 00:01:43,900
+y trazas una línea recta que pase por esos dos puntos
+
+41
+00:01:44,100 --> 00:01:45,700
+así se grafica una función lineal
+
+42
+00:01:46,466 --> 00:01:47,900
+ahora si te das cuenta
+
+43
+00:01:48,333 --> 00:01:51,300
+al costadito en la función nos están diciendo que esta
+
+44
+00:01:51,666 --> 00:01:52,466
+esa gráfica
+
+45
+00:01:52,966 --> 00:01:56,700
+solamente me importa la parte que va del cero hasta 02
+
+46
+00:01:57,266 --> 00:01:59,666
+así es que lo que vamos a hacer es en 00
+
+47
+00:02:00,500 --> 00:02:01,933
+voy a agarrar una tijerita
+
+48
+00:02:02,200 --> 00:02:06,333
+primero que nada dibujo una línea vertical en 00 y
+
+49
+00:02:06,966 --> 00:02:10,266
+y eh con una tijerita corto todo
+
+50
+00:02:11,200 --> 00:02:15,166
+este y voy a eliminar la parte anterior del cero
+
+51
+00:02:15,966 --> 00:02:17,966
+igualito me voy al dos en 02
+
+52
+00:02:18,133 --> 00:02:20,733
+trazo otra vertical y corto con una tijerita
+
+53
+00:02:21,000 --> 00:02:22,866
+y me olvido de la parte de la derecha
+
+54
+00:02:23,200 --> 00:02:24,166
+como me están pidiendo
+
+55
+00:02:24,300 --> 00:02:26,900
+que solamente importa lo que va entre cero y dos
+
+56
+00:02:27,200 --> 00:02:29,500
+me voy a quedar con esa parte de la función
+
+57
+00:02:30,166 --> 00:02:32,066
+entonces una vez que ya lo tengo cortado
+
+58
+00:02:32,766 --> 00:02:34,533
+esto va a mi collage final
+
+59
+00:02:35,766 --> 00:02:36,733
+listo siguiente
+
+60
+00:02:37,533 --> 00:02:40,200
+el otro es una función eh cuadrática
+
+61
+00:02:40,300 --> 00:02:41,200
+que nosotros ya hemos visto
+
+62
+00:02:41,300 --> 00:02:43,800
+cómo graficar estas funciones cuadráticas recuerda
+
+63
+00:02:44,933 --> 00:02:46,566
+eh en este caso dice
+
+64
+00:02:46,800 --> 00:02:48,733
+t -2 al cuadrado más 6
+
+65
+00:02:48,933 --> 00:02:50,966
+ahí hay 1 2 entre tres que eso
+
+66
+00:02:51,166 --> 00:02:52,600
+para la forma de la función
+
+67
+00:02:53,200 --> 00:02:54,733
+no cambia mucho okay
+
+68
+00:02:55,400 --> 00:02:57,000
+entonces qué es lo que vamos a hacer
+
+69
+00:02:57,700 --> 00:03:00,566
+eh primero que nada recuerda lo que dijimos ponemos
+
+70
+00:03:01,200 --> 00:03:02,200
+la función original
+
+71
+00:03:02,966 --> 00:03:05,266
+que es la parábola que es el Tear cuadrado
+
+72
+00:03:05,733 --> 00:03:08,600
+como estoy restándole dos adentro me voy a mover
+
+73
+00:03:09,666 --> 00:03:10,466
+en horizontal
+
+74
+00:03:10,700 --> 00:03:13,533
+en este caso como es -2 me muevo dos espacios
+
+75
+00:03:13,666 --> 00:03:14,466
+a la derecha
+
+76
+00:03:15,066 --> 00:03:16,466
+una vez que se haya movido
+
+77
+00:03:16,800 --> 00:03:18,566
+dice que le voy a sumar 6
+
+78
+00:03:18,866 --> 00:03:21,966
+y recuerda que sumar 6 afuera significaba moverme
+
+79
+00:03:22,500 --> 00:03:24,500
+hacia arriba 6 espacios
+
+80
+00:03:24,933 --> 00:03:26,366
+listo ya lo tengo movido
+
+81
+00:03:27,300 --> 00:03:28,166
+eh y ese
+
+82
+00:03:28,266 --> 00:03:30,533
+como te digo ese 2/3 que se está multiplicando
+
+83
+00:03:30,600 --> 00:03:32,966
+lo único que hacer es que va como que
+
+84
+00:03:33,333 --> 00:03:35,566
+agachar un poquito la función como que
+
+85
+00:03:36,000 --> 00:03:38,966
+eh comprimirla un poquito pero en cuanto
+
+86
+00:03:39,766 --> 00:03:42,300
+a al a la posición sigue estando acá
+
+87
+00:03:43,066 --> 00:03:44,733
+listo entonces ya que tenemos esto
+
+88
+00:03:45,566 --> 00:03:48,166
+ahora eh me dicen que esa parte de la función
+
+89
+00:03:48,333 --> 00:03:49,700
+solamente va de 2 a 5
+
+90
+00:03:50,266 --> 00:03:53,000
+así es que hago lo que hice en el pasado desde dos
+
+91
+00:03:53,333 --> 00:03:54,300
+corto corto corto
+
+92
+00:03:54,533 --> 00:03:58,866
+corto hasta 5 corto corto corto corto y me o sea
+
+93
+00:03:59,000 --> 00:04:00,400
+lo que está fuera de eso
+
+94
+00:04:00,566 --> 00:04:03,800
+lo elimino y me quedo con lo del centro así es que
+
+95
+00:04:04,566 --> 00:04:07,533
+eso va a mi collage final la siguiente
+
+96
+00:04:07,733 --> 00:04:09,666
+también es una función lineal como la primera
+
+97
+00:04:09,800 --> 00:04:12,500
+así es que ya sabemos cómo hacerlo tabulamos
+
+98
+00:04:13,133 --> 00:04:17,533
+eh pongo la función es igual a 1,5 t más 4
+
+99
+00:04:18,333 --> 00:04:21,666
+eh hago mi tablita al costado t vale uno
+
+100
+00:04:22,100 --> 00:04:27,166
+la función vale 6 cuando t vale dos la función vale 7,5
+
+101
+00:04:28,333 --> 00:04:31,333
+y pongo los dos puntos que acabamos de encontrar
+
+102
+00:04:32,200 --> 00:04:33,000
+y
+
+103
+00:04:33,100 --> 00:04:34,300
+en en la gráfica
+
+104
+00:04:34,533 --> 00:04:37,866
+trazo con una línea recta y me dicen que va de 5 a 11
+
+105
+00:04:38,600 --> 00:04:41,766
+igual en 5 corto corto corto en 11 corto corto corto
+
+106
+00:04:41,900 --> 00:04:44,900
+me quedo con lo del centro y lo uno a mi collage final
+
+107
+00:04:45,666 --> 00:04:47,066
+una vez que ya lo hicimos
+
+108
+00:04:47,666 --> 00:04:50,066
+ya es tenemos la gráfica original
+
+109
+00:04:50,866 --> 00:04:53,133
+okay o la gráfica final mejor dicho
+
