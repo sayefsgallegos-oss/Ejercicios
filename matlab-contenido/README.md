@@ -12,6 +12,7 @@ Videos y piezas gráficas de matLab Perú generados con programación (Python + 
 | `videos/robots_error404.mp4` | Error 404: Numi se equivocó |
 | `videos/robots_novela_cap1.mp4` | La señal perdida, capítulo 1 |
 | `videos/robots_novela_cap2.mp4` | La señal perdida, capítulo 2 |
+| `videos/robots_novela_cap3.mp4` | La señal perdida, capítulo 3 |
 | `carrusel_errores/` | Carrusel "Errores comunes" (5 láminas 1080×1350) |
 | `campana_rescate/` | Campaña "Misión Rescate" (3 posts + 1 historia, con QR a WhatsApp) |
 
@@ -24,6 +25,8 @@ Poses recortadas con fondo transparente:
 - `equis*`: Equis · `carbon_cero_*`: Señor Cero (gris carbón) · `num_1`…`num_9` y `siete*`: habitantes de Matemópolis
 
 `assets/robots/` tiene las poses originales y `assets/logo.png` el logo.
+
+`mision.py` dibuja la tarjeta "Misión para ti" del final de cada capítulo; `assets/ganador_capN.png` es la captura del primero en acertar.
 
 ## Cómo generar un video
 

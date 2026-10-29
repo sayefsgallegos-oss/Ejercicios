@@ -6,6 +6,7 @@ from PIL import Image
 from robots import *
 import robots
 from rr_novela_cap1 import night
+from mision import mission, answer_box, frac
 
 DUR = 71.0
 USER = "@gustavo.alvarado4"
@@ -376,20 +377,14 @@ def scene_end(ctx, t):
         text(ctx, s[:max(0, n)], W / 2, 860, 120, YEL, alpha=a, outline=NAVY, ow=14)
         pill(ctx, W / 2, 1040, "Capítulo 3:  La torre del Señor Cero", 46, WHITE, NAVY, a, pop(t, END + 2.0), padx=34, pady=20)
     if t >= ASK:
-        k = ease_out(prog(t, ASK, ASK + 0.5)); y0 = 420 + 60 * (1 - k)
-        card(ctx, 90, y0, 900, 900, 56, alpha=k)
-        text(ctx, "Ayuda a Matti", W / 2, y0 + 110, 76, BLUE, alpha=k)
-        text(ctx, "a abrir la jaula de Numi", W / 2, y0 + 200, 46, NAVY, alpha=k)
-        kk = pop(t, ASK + 0.6, 0.5)
-        ctx.save(); ctx.translate(W / 2, y0 + 390); sc(ctx, kk)
-        rrect(ctx, -400, -100, 800, 200, 40); ctx.set_source_rgba(*hexc("#0E2A3A", k)); ctx.fill()
-        segs(ctx, [("7 × 8 − 6 × 9 = ", "#B6FFCF"), ("?", YEL)], 0, 0, 84, alpha=k)
-        ctx.restore()
-        text(ctx, "Pista: primero multiplica", W / 2, y0 + 570, 44, GREY, "Nunito ExtraBold", alpha=k * ease_out(prog(t, ASK + 1.0, ASK + 1.4)))
-        text(ctx, "Comenta la clave", W / 2, y0 + 680, 60, PINK, alpha=k * ease_out(prog(t, ASK + 1.3, ASK + 1.7)))
-        pill(ctx, W / 2, 1440, "Síguenos para ver el capítulo 3", 48, YEL, NAVY, 1, pop(t, ASK + 2.0) * (1 + 0.03 * math.sin(t * 6)), padx=40, pady=22)
-        put(ctx, "matti_emo04", W / 2 - 170, 1880, 330, k)
-        put(ctx, "equis05", W / 2 + 170, 1880, 300, k)
+        def eq(c, x, y, a):
+            w1 = text_w(c, "7 × 8 − 6 × 9 = ", 84)
+            segs(c, [("7 × 8 − 6 × 9 = ", NAVY)], x - 50, y, 84, alpha=a)
+            answer_box(c, x - 50 + w1 / 2 + 50, y, 92, t, a)
+        mission(ctx, t, ASK, [[("Ingresa la clave para", WHITE)], [("rescatar a ", WHITE), ("Numi", ORANGE), (":", WHITE)]],
+                eq, hint="primero multiplica")
+        pill(ctx, W / 2, 1600, "Síguenos para ver el capítulo 3", 48, YEL, NAVY, 1, pop(t, ASK + 2.6) * (1 + 0.03 * math.sin(t * 6)), padx=40, pady=22)
+        put(ctx, "numi_c00", W / 2 + 330, 1900, 260, ease_out(prog(t, ASK + 0.5, ASK + 1.0)))
 
 def draw(ctx, t):
     scene_recap(ctx, t)
