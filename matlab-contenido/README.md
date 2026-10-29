@@ -14,7 +14,8 @@ Videos y piezas gráficas de matLab Perú generados con programación (Python + 
 | `videos/robots_novela_cap2.mp4` | La señal perdida, capítulo 2 |
 | `videos/robots_novela_cap3.mp4` | La señal perdida, capítulo 3 |
 | `carrusel_errores/` | Carrusel "Errores comunes" (5 láminas 1080×1350) |
-| `campana_rescate/` | Campaña "Misión Rescate" (3 posts + 1 historia, con QR a WhatsApp) |
+| `campana_rescate/` | Campaña "Misión Rescate" (3 posts + 1 historia, flyer único y flyer A5 en PDF para imprenta, con QR a WhatsApp) |
+| `campana_verano/` | Campaña "Verano 2027" (2 posts + 1 historia) |
 
 ## Personajes (`assets/robots_v2/`)
 
