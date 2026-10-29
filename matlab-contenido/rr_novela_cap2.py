@@ -227,25 +227,40 @@ def winner_card(ctx, t, st, en):
     ctx.restore()
 
 # ---------- escenas ----------
+CLIPS = [(0.0, 2.2, 23.6), (2.2, 4.4, 33.0), (4.4, 6.0, 38.8)]   # (desde, hasta, segundo del cap. 1)
+
 def scene_recap(ctx, t):
-    if t >= LAB + 0.2: return
-    night(ctx, t)
-    al = 1 - prog(t, LAB - 0.4, LAB)
-    text(ctx, "Anteriormente…", W / 2, 360, 60, "#BFD6FF", "Nunito ExtraBold", alpha=al * ease_out(prog(t, 0.2, 0.7)))
-    if 0.8 <= t < 3.4:
-        a = al * fade(t, 0.8, 3.4, 0.25)
-        g = cairo.LinearGradient(0, 0, 0, 1500); g.add_color_stop_rgba(0, 0.7, 1, 0.6, 0); g.add_color_stop_rgba(1, 0.7, 1, 0.6, 0.4 * a)
-        ctx.move_to(W / 2 - 60, 0); ctx.line_to(W / 2 + 60, 0); ctx.line_to(W / 2 + 240, 1500); ctx.line_to(W / 2 - 240, 1500); ctx.close_path()
-        ctx.set_source(g); ctx.fill()
-        robots.sprite(ctx, "c03", W / 2, 1300 - 500 * ease_in_out(prog(t, 1.2, 3.2)), 700, a)
-        text(ctx, "¡Se llevaron a Numi!", W / 2, 1620, 64, YEL, alpha=a, outline=NAVY, ow=10)
-    if 3.4 <= t < LAB:
-        a = al * ease_out(prog(t, 3.4, 3.7))
-        put(ctx, "matti_nov_b00", W / 2, 1650, 420, a)
-        rrect(ctx, W / 2 - 330, 640, 660, 140, 30); ctx.set_source_rgba(0.08, 0.2, 0.25, 0.92 * a); ctx.fill_preserve()
-        ctx.set_line_width(5); ctx.set_source_rgba(0.4, 1, 0.65, a); ctx.stroke()
-        text(ctx, "1 · 4 · 9 · 16 · ?", W / 2, 710, 70, "#B6FFCF", alpha=a)
-        pill(ctx, W / 2, 900, "Capítulo 2:  ¿Dónde está Numi?", 50, "#22E3FF", NAVY, a, pop(t, 4.4), padx=36, pady=20)
+    """'Anteriormente…': momentos reales del capítulo 1 en blanco y negro, con viñeta, grano y rebobinado."""
+    if t >= LAB: return
+    import rr_novela_cap1 as cap1
+    t1 = None
+    for a, b, src in CLIPS:
+        if a <= t < b: t1 = src + (t - a)
+    if t1 is None: t1 = 40.6
+    cap1.draw(ctx, t1)
+    ctx.set_operator(cairo.OPERATOR_HSL_SATURATION); ctx.set_source_rgb(0.5, 0.5, 0.5); ctx.paint()
+    ctx.set_operator(cairo.OPERATOR_OVER)
+    rg = cairo.RadialGradient(W / 2, H / 2, 300, W / 2, H / 2, 1150)
+    rg.add_color_stop_rgba(0, 0, 0, 0, 0); rg.add_color_stop_rgba(1, 0, 0, 0, 0.75)
+    ctx.set_source(rg); ctx.paint()
+    r = random.Random(int(t * 24))
+    for _ in range(500):
+        ctx.rectangle(r.uniform(0, W), r.uniform(0, H), 3, 3)
+    ctx.set_source_rgba(1, 1, 1, 0.12); ctx.fill()
+    for a, b, src in CLIPS[1:]:
+        f = 1 - abs(t - a) / 0.12
+        if f > 0: ctx.rectangle(0, 0, W, H); ctx.set_source_rgba(1, 1, 1, 0.6 * f); ctx.fill()
+    text(ctx, "Anteriormente…", W / 2, 300, 66, WHITE, "Nunito ExtraBold", alpha=ease_out(prog(t, 0.2, 0.6)), outline=NAVY, ow=10)
+    if t >= 6.0:   # rebobinado
+        p = prog(t, 6.0, LAB)
+        r = random.Random(int(t * 60))
+        for _ in range(14):
+            y = r.uniform(0, H); ctx.rectangle(0, y, W, r.uniform(4, 30))
+            ctx.set_source_rgba(1, 1, 1, 0.35); ctx.fill()
+        for i in range(2):
+            x = W / 2 - 60 + i * 80
+            ctx.move_to(x + 40, 860); ctx.line_to(x - 30, 960); ctx.line_to(x + 40, 1060); ctx.close_path()
+            ctx.set_source_rgba(1, 1, 1, 0.9 * (1 - p)); ctx.fill()
 
 def scene_lab(ctx, t):
     if not (LAB <= t < CITY): return
@@ -393,11 +408,10 @@ def draw(ctx, t):
     scene_tower(ctx, t)
     scene_end(ctx, t)
     logo(ctx, t, 0.9)
-    for at in (LAB, TOWER):
-        fade_black(ctx, t, at)
+    fade_black(ctx, t, TOWER)
 
 def events():
-    ev = [(0.3, "boom", 0), (0.8, "hum", 0), (3.4, "pop", 0), (4.4, "pop", 1)]
+    ev = [(0.2, "glitch", 0), (2.2, "flash", 0), (4.4, "flash", 0), (6.0, "rise", 0), (6.1, "glitch", 0)]
     ev += [(LAB, "whoosh", 0), (10.4, "success", 0), (10.5, "fanfare", 0)]
     ev += [(SQ, "whoosh", 0)] + [(SQ + 1.0 + k * 1.1, "note", k) for k in range(5)] + [(SQ + 5.6, "success", 1)]
     ev += [(TP + 0.2, "beep", 0), (23.6, "rise", 0), (26.4, "flash", 0)]
