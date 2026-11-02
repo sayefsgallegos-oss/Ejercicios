@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nosotros | matLab, centro de enseñanza matemática y financiera</title>
+  <meta name="description" content="Conoce a matLab: 14 años de experiencia, más de 12 000 alumnos atendidos y un equipo de profesores especializados en matemática y educación financiera.">
+  <link rel="canonical" href="https://matlab.com.pe/nosotros/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="matLab">
+  <meta property="og:title" content="Nosotros | matLab, centro de enseñanza matemática y financiera">
+  <meta property="og:description" content="Conoce a matLab: 14 años de experiencia, más de 12 000 alumnos atendidos y un equipo de profesores especializados en matemática y educación financiera.">
+  <meta property="og:image" content="https://matlab.com.pe/img/equipo/marco-director.webp">
+  <meta property="og:url" content="https://matlab.com.pe/nosotros/">
+  <meta name="theme-color" content="#0ea5ec">
+  <link rel="icon" href="/img/logo-matlab.webp" type="image/webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap">
+  <link rel="stylesheet" href="/css/estilos.css">
+  <script src="/js/config.js" defer></script>
+  <script src="/js/datos.js" defer></script>
+  <script src="/js/main.js" defer></script>
+</head>
+<body>
+  <!-- Cabecera y menú: se generan solos (js/main.js) -->
+  <div id="cabecera"></div>
+
+  <main>
+
+    <section class="hero-nosotros">
+      <div class="contenedor">
+        <div class="texto">
+          <h1>EL MEJOR CENTRO DE <span class="amarillo">ENSEÑANZA MATEMÁTICA Y FINANCIERA</span> DEL PERÚ</h1>
+          <p class="firma">Marco Loret de Mola <small>DIRECTOR GENERAL</small></p>
+        </div>
+        <img src="/img/equipo/marco-director.webp" alt="Marco Loret de Mola, director general de matLab" width="700" height="761" fetchpriority="high">
+      </div>
+    </section>
+
+    <!-- ============ CIFRAS (cambia los números en data-contar) ============ -->
+    <section class="seccion cuadricula">
+      <div class="contenedor cifras">
+        <div class="cifra aparece"><div class="numero"><b><span data-contar="94">94</span>%</b><small>de los padres nos indicaron</small></div><span class="pastilla">que nos recomendarán con sus amigos</span></div>
+        <div class="cifra aparece"><div class="numero"><b data-contar="9">9</b><small>de cada 10 padres</small></div><span class="pastilla">calificaron a nuestros profes buenos o buenazos</span></div>
+        <div class="cifra aparece"><div class="numero"><b data-contar="7">7</b><small>de cada 10 padres nos indicaron</small></div><span class="pastilla">que nuestras clases superaron sus expectativas</span></div>
+        <div class="cifra aparece"><div class="numero"><b data-contar="9">9</b><small>de cada 10 padres</small></div><span class="pastilla">se sintieron muy satisfechos con el servicio</span></div>
+      </div>
+    </section>
+
+    <!-- ============ TESTIMONIOS EN VIDEO ============ -->
+    <section class="seccion cuadricula" style="padding-top:0">
+      <div class="contenedor">
+        <h2 class="titulo">Abordamos la problemática y la solucionamos. ¡Todo gracias a las <span class="amarillo">matemáticas!</span></h2>
+        <div class="testimonios">
+          <div data-video="JQA3hZPN9T4" data-miniatura="/img/videos/testimonio-1.webp" data-titulo="Video 1"></div>
+          <div data-video="RgZsUta_LA4" data-miniatura="/img/videos/testimonio-2.webp" data-titulo="Video 2"></div>
+          <div data-video="AjX5ylXbaPU" data-miniatura="/img/videos/testimonio-3.webp" data-titulo="Video 3"></div>
+        </div>
+        <p class="a-pedido">Visita nuestro canal de YouTube para más videos: <a href="https://www.youtube.com/@matlab_peru/videos" target="_blank" rel="noopener">Ver canal</a></p>
+      </div>
+    </section>
+
+    <!-- ============ VIDEO + DATOS ============ -->
+    <section class="seccion cuadricula" style="padding-top:0">
+      <div class="contenedor video-y-checks" style="margin-top:0">
+        <div data-video="RZcbxRo8Q7I" data-miniatura="/img/videos/nosotros.webp" data-titulo="Conoce matLab"></div>
+        <ul class="checks aparece">
+          <li><span><strong data-contar="14">14</strong> años de experiencia.</span></li>
+          <li>Clases 100% virtuales e individuales.</li>
+          <li>Más de 12 000 alumnos atendidos con éxito.</li>
+          <li>Más de 600 clases semanales.</li>
+          <li>Metodología didáctica para fácil aprendizaje.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ MISIÓN Y VISIÓN ============ -->
+    <section class="seccion cuadricula" style="padding-top:0">
+      <div class="contenedor mision-vision">
+        <article class="aparece"><h3>Visión</h3><p>Queremos hacer de la educación el vehículo para un mundo mejor y el cambio que nuestra sociedad necesita.</p></article>
+        <article class="aparece"><h3>Misión</h3><p>Cambiar la vida de nuestros estudiantes y colaboradores, generándoles pasión por alcanzar sus metas.</p></article>
+      </div>
+    </section>
+
+    <!-- ============ EQUIPO (se edita en js/datos.js o en Supabase, tabla "equipo") ============ -->
+    <section class="seccion cuadricula" style="padding-top:0">
+      <div class="contenedor">
+        <h2 class="titulo">Conoce a quienes hacen que tu hijo domine las <span class="amarillo">matemáticas</span></h2>
+      </div>
+      <div class="equipo" id="equipo" aria-label="Equipo de matLab"></div>
+      <div class="contenedor" style="text-align:center;margin-top:2.5rem"><a class="boton boton-rojo" data-whatsapp="general">¡Contáctanos!</a></div>
+    </section>
+
+    <!-- ============ TALLERES PARA EMPRESAS ============ -->
+    <section class="empresas">
+      <div class="contenedor">
+        <div class="texto aparece">
+          <h2>Talleres de números y educación financiera para empresas</h2>
+          <p>Contáctate con nuestro equipo y llevemos la educación a un nuevo nivel.</p>
+          <div class="botones">
+            <a class="boton boton-rojo" data-whatsapp="empresas">¡Contáctanos!</a>
+            <a class="boton boton-blanco" href="mailto:marketing@matlab.com.pe">marketing@matlab.com.pe</a>
+          </div>
+        </div>
+        <img src="/img/equipo/marco-empresas.webp" alt="Marco Loret de Mola, director de matLab" width="589" height="754" loading="lazy">
+      </div>
+    </section>
+  </main>
+
+  <!-- Pie de página: se genera solo (js/main.js) -->
+  <div id="pie"></div>
+</body>
+</html>

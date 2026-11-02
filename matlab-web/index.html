@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>matLab | Clases de matemáticas y finanzas 100% virtuales para niños y jóvenes</title>
+  <meta name="description" content="Centro de enseñanza de matemática y educación financiera con 14 años de experiencia. Clases 100% virtuales de 1° de primaria a 5° de secundaria: Mensual Power, Anual Élite, S.O.S. y talleres.">
+  <link rel="canonical" href="https://matlab.com.pe/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="matLab">
+  <meta property="og:title" content="matLab | Clases de matemáticas y finanzas 100% virtuales para niños y jóvenes">
+  <meta property="og:description" content="Centro de enseñanza de matemática y educación financiera con 14 años de experiencia. Clases 100% virtuales de 1° de primaria a 5° de secundaria: Mensual Power, Anual Élite, S.O.S. y talleres.">
+  <meta property="og:image" content="https://matlab.com.pe/img/banners/power.webp">
+  <meta property="og:url" content="https://matlab.com.pe/">
+  <meta name="theme-color" content="#0ea5ec">
+  <link rel="icon" href="/img/logo-matlab.webp" type="image/webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap">
+  <link rel="stylesheet" href="/css/estilos.css">
+  <script src="/js/config.js" defer></script>
+  <script src="/js/datos.js" defer></script>
+  <script src="/js/main.js" defer></script>
+</head>
+<body>
+  <!-- Cabecera y menú: se generan solos (js/main.js) -->
+  <div id="cabecera"></div>
+
+  <main>
+
+    <!-- ============ CARRUSEL (los banners se editan en js/datos.js o Supabase) ============ -->
+    <section class="carrusel" id="carrusel" aria-label="Programas destacados"></section>
+
+    <!-- ============ AVISO DE TEMPORADA (se edita en js/config.js) ============ -->
+    <div id="aviso-temporada"></div>
+
+    <!-- ============ FORMULARIO ============ -->
+    <section class="seccion cuadricula" id="contacto">
+      <div class="contenedor">
+        <div class="caja-form">
+            <h2>¡TE <span class="amarillo">CONTACTAMOS!</span></h2>
+            <p>Déjanos tus datos para que una asesora se comunique contigo.</p>
+            <div data-formulario="home"></div>
+          </div>
+        <div class="o-whatsapp"><p>O escríbenos directo al WhatsApp 👇</p><a class="boton boton-verde" data-whatsapp="reservar">¡Quiero reservar ahora!</a></div>
+      </div>
+    </section>
+
+    <!-- ============ QUIÉNES SOMOS (franja) ============ -->
+    <section class="franja-azul">
+      <div class="contenedor">
+        <p>Somos un centro de enseñanza que tiene como objetivo <strong>RECONCILIAR</strong> a los estudiantes, docentes, colaboradores y personas en general con las matemáticas y las finanzas.</p>
+        <a class="boton boton-rojo" href="/nosotros/">¡Conócenos más!</a>
+      </div>
+    </section>
+
+    <!-- ============ VIDEO + VENTAJAS ============ -->
+    <section class="seccion cuadricula">
+      <div class="contenedor">
+        <h2 class="titulo">Hacemos los números <span class="amarillo">+ FÁCILES + DINÁMICOS</span></h2>
+        <div class="video-y-checks">
+          <div data-video="PUx7Ddgve3A" data-miniatura="/img/videos/home.webp" data-titulo="¿Por qué estudiar con nosotros?"></div>
+          <ul class="checks aparece">
+            <li>Clases 100% virtuales.</li>
+            <li>Estudia desde cualquier parte del mundo.</li>
+            <li>Staff de profesores altamente capacitados.</li>
+            <li>Especialistas en el dictado de matemática y educación financiera.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PROGRAMAS ============ -->
+    <section class="seccion cuadricula" id="programas" style="padding-top:0">
+      <div class="contenedor">
+        <div class="portal-cta">
+          <p class="titulo">Ingresa a nuestro <span class="amarillo">Portal para Padres</span>:</p>
+          <a class="boton boton-rojo" href="/registro-de-notas-matlab/">¡Ingresar al portal!</a>
+        </div>
+        <h2 class="titulo" style="margin-top:3rem">Empieza a <span class="amarillo">CONSTRUIR SU FUTURO</span> desde ahora</h2>
+        <div class="barra-programas"><h3>Programas</h3><span>100% Virtuales</span></div>
+        <div class="tarjetas" data-tarjetas="home"></div>
+        <p class="a-pedido" id="a-pedido"></p>
+      </div>
+    </section>
+
+    <!-- ============ TALLERES PARA EMPRESAS ============ -->
+    <section class="empresas">
+      <div class="contenedor">
+        <div class="texto aparece">
+          <h2>Talleres de números y educación financiera para empresas</h2>
+          <p>Contáctate con nuestro equipo y llevemos la educación a un nuevo nivel.</p>
+          <div class="botones">
+            <a class="boton boton-rojo" data-whatsapp="empresas">¡Contáctanos!</a>
+            <a class="boton boton-blanco" href="mailto:marketing@matlab.com.pe">marketing@matlab.com.pe</a>
+          </div>
+        </div>
+        <img src="/img/equipo/marco-empresas.webp" alt="Marco Loret de Mola, director de matLab" width="589" height="754" loading="lazy">
+      </div>
+    </section>
+  </main>
+
+  <!-- Pie de página: se genera solo (js/main.js) -->
+  <div id="pie"></div>
+
+  <!-- Formularios "fantasma" para que Netlify reconozca los campos y mande el aviso por correo.
+       No se ven. Si agregas un campo nuevo a los formularios, agrégalo aquí también. -->
+  <form name="contacto" data-netlify="true" netlify-honeypot="sitio_web" hidden>
+    <input name="nombre"><input name="apellido"><input name="celular"><input name="correo">
+    <input name="programa"><input name="grado"><input name="frecuencia"><input name="horario"><input name="servicio">
+    <input name="pagina"><input name="utm_source"><input name="utm_medium"><input name="utm_campaign"><input name="acepta"><input name="sitio_web">
+  </form>
+  <form name="reserva-sos" data-netlify="true" netlify-honeypot="sitio_web" hidden>
+    <input name="apoderado"><input name="correo"><input name="celular"><input name="estudiante"><input name="grado">
+    <input name="dia"><input name="horas"><input name="rango"><input name="total"><input name="estado">
+    <input name="pagina"><input name="utm_source"><input name="utm_medium"><input name="utm_campaign"><input name="sitio_web">
+  </form>
+</body>
+</html>
