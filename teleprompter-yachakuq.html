@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teleprompter Yachakuq</title>
+<style>
+  :root {
+    --bg: #0b0b0c;
+    --fg: #f4f1ea;
+    --muted: #9a968d;
+    --accent: #f2b33d;
+    --panel: rgba(22, 22, 24, 0.94);
+    --line: rgba(242, 179, 61, 0.18);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; overflow: hidden; }
+
+  #stage { position: fixed; inset: 0; overflow-y: scroll; scrollbar-width: none; }
+  #stage::-webkit-scrollbar { display: none; }
+  #text {
+    max-width: var(--width, 900px); margin: 0 auto; padding: calc(var(--gtop, 35vh) - var(--size, 56px) * 0.725) 24px 100vh;
+    font-size: var(--size, 56px); line-height: 1.45; font-weight: 500;
+    text-align: var(--align, left); transition: font-size .15s;
+  }
+  #text p { margin: 0 0 1em; }
+  #text strong { color: var(--accent); font-weight: 700; }
+  body.mirror #text { transform: scaleX(-1); }
+  body.mirror-v #text { transform: scaleY(-1); }
+  body.mirror.mirror-v #text { transform: scale(-1, -1); }
+
+  /* Guía de lectura */
+  #guide { position: fixed; left: 0; right: 0; top: var(--guide, 35%); height: calc(var(--size, 56px) * 1.6);
+    transform: translateY(-50%); background: var(--line); border-top: 2px solid var(--accent);
+    border-bottom: 2px solid var(--accent); pointer-events: none; opacity: .9; }
+  #guide::before, #guide::after { content: "▶"; position: absolute; top: 50%; transform: translateY(-50%);
+    color: var(--accent); font-size: 28px; left: 8px; }
+  #guide::after { content: "◀"; left: auto; right: 8px; }
+  body.noguide #guide { display: none; }
+  #fadeTop, #fadeBot { position: fixed; left: 0; right: 0; height: 18vh; pointer-events: none; }
+  #fadeTop { top: 0; background: linear-gradient(var(--bg), transparent); }
+  #fadeBot { bottom: 0; background: linear-gradient(transparent, var(--bg)); }
+
+  /* Panel de control */
+  #panel { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%);
+    width: min(980px, calc(100% - 32px)); background: var(--panel); border: 1px solid #333;
+    border-radius: 16px; padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 12px 20px;
+    align-items: center; transition: opacity .4s, transform .4s; z-index: 10;
+    box-shadow: 0 10px 40px rgba(0,0,0,.5); }
+  body.playing.idle #panel { opacity: 0; transform: translate(-50%, 20px); pointer-events: none; }
+  #panel label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted);
+    min-width: 150px; flex: 1; }
+  #panel label span b { color: var(--fg); font-variant-numeric: tabular-nums; }
+  input[type=range] { width: 100%; accent-color: var(--accent); }
+  button { background: #2a2a2d; color: var(--fg); border: 1px solid #3a3a3e; border-radius: 10px;
+    padding: 9px 13px; font-size: 14px; cursor: pointer; white-space: nowrap; }
+  button:hover { background: #343438; }
+  button.on { border-color: var(--accent); color: var(--accent); }
+  #play { background: var(--accent); color: #1a1406; font-weight: 700; border: none; min-width: 120px; font-size: 16px; }
+  .group { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  #countdown { position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
+    font-size: 30vmin; font-weight: 800; color: var(--accent); background: rgba(0,0,0,.6); z-index: 20; }
+  #progress { position: fixed; top: 0; left: 0; height: 4px; background: var(--accent); width: 0; z-index: 11; }
+
+  /* Editor */
+  #editor { position: fixed; inset: 0; background: rgba(0,0,0,.85); display: none; z-index: 30;
+    align-items: center; justify-content: center; padding: 16px; }
+  #editor .box { background: #161618; border: 1px solid #333; border-radius: 16px; padding: 16px;
+    width: min(900px, 100%); height: min(85vh, 800px); display: flex; flex-direction: column; gap: 12px; }
+  #editor textarea { flex: 1; background: #0e0e10; color: var(--fg); border: 1px solid #333; border-radius: 10px;
+    padding: 14px; font-size: 16px; line-height: 1.5; resize: none; font-family: inherit; }
+  #editor small { color: var(--muted); }
+
+  #help { position: fixed; top: 12px; right: 16px; font-size: 12px; color: var(--muted); z-index: 10;
+    transition: opacity .4s; text-align: right; }
+  body.playing #help { opacity: 0; }
+  kbd { background: #222; border: 1px solid #444; border-radius: 4px; padding: 1px 5px; font-size: 11px; color: var(--fg); }
+
+  @media (max-width: 640px) {
+    #panel label { min-width: 120px; }
+    #help { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<div id="stage"><div id="text"></div></div>
+<div id="fadeTop"></div><div id="fadeBot"></div>
+<div id="guide"></div>
+<div id="countdown"></div>
+
+<div id="help">
+  <kbd>Espacio</kbd> iniciar/pausar · <kbd>↑</kbd><kbd>↓</kbd> velocidad · <kbd>+</kbd><kbd>−</kbd> letra<br>
+  <kbd>R</kbd> reiniciar · <kbd>F</kbd> pantalla completa · <kbd>M</kbd> espejo · rueda del mouse para mover
+</div>
+
+<div id="panel">
+  <button id="play">▶ Iniciar</button>
+  <label><span>Velocidad: <b id="speedVal"></b></span>
+    <input id="speed" type="range" min="1" max="20" step="0.5"></label>
+  <label><span>Tamaño de letra: <b id="sizeVal"></b></span>
+    <input id="size" type="range" min="24" max="140" step="2"></label>
+  <label><span>Ancho del texto: <b id="widthVal"></b></span>
+    <input id="width" type="range" min="40" max="100" step="5"></label>
+  <label><span>Línea guía: <b id="guideVal"></b></span>
+    <input id="guidePos" type="range" min="15" max="70" step="1"></label>
+  <div class="group">
+    <button id="restart" title="Volver al inicio (R)">⟲ Inicio</button>
+    <button id="countBtn" title="Cuenta regresiva de 3 segundos antes de iniciar">3‑2‑1</button>
+    <button id="alignBtn" title="Alinear texto">Centrar</button>
+    <button id="guideBtn" class="on" title="Mostrar u ocultar la línea guía">Guía</button>
+    <button id="mirrorBtn" title="Espejo horizontal para teleprompter con vidrio (M)">Espejo ⇋</button>
+    <button id="fsBtn" title="Pantalla completa (F)">⛶ Pantalla</button>
+    <button id="editBtn" title="Editar el texto">✎ Editar texto</button>
+  </div>
+</div>
+
+<div id="editor">
+  <div class="box">
+    <strong>Editar texto</strong>
+    <small>Separa los párrafos con una línea en blanco. Escribe **así** para resaltar una frase.</small>
+    <textarea id="src"></textarea>
+    <div class="group" style="justify-content:flex-end">
+      <button id="resetText">Restaurar original</button>
+      <button id="cancelEdit">Cancelar</button>
+      <button id="saveEdit" style="background:var(--accent);color:#1a1406;border:none;font-weight:700">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const ORIGINAL = `Hola, ¿qué tal? Mi nombre es Pier y quiero pedirte unos minutos de tu tiempo, porque necesito de tu ayuda.
+
+Desde hace mucho tiempo he tenido la inquietud de hacer algo bueno por los demás. De sentir que, de alguna manera, puedo dejar una huella positiva en el mundo.
+
+El problema es que durante mucho tiempo no sabía cómo hacerlo. A veces sentía que no tenía mucho que ofrecer, hasta que empecé a pensar en las cosas que más me gustan y en aquello que mejor sé hacer.
+
+Soy profesor de matemáticas desde hace más de 15 años. Y si hay algo que he aprendido durante todo este tiempo, es que enseñar no se trata solamente de explicar un tema o resolver un ejercicio.
+
+He conocido a muchísimos estudiantes, cada uno con sus propias dificultades, inseguridades y formas de aprender. Y con muchos de ellos he llegado a formar vínculos que van mucho más allá de una clase.
+
+Creo que eso es lo que más me gusta de enseñar: poder ayudar a alguien que pensaba que no podía aprender algo y demostrarle que sí puede.
+
+Y entonces pensé: ¿por qué no intentar llevar eso a más personas?
+
+Así nació **Yachakuq**.
+
+Yachakuq es un proyecto educativo personal en el que he estado trabajando con muchísimo cariño. Es una plataforma completamente gratuita donde cualquier persona puede aprender matemáticas, desde primaria hasta secundaria.
+
+Cada tema cuenta con un video explicativo corto y sencillo, ejercicios para practicar y pequeños videojuegos para aprender de una manera diferente.
+
+Pero había algo que para mí era especialmente importante: que esta plataforma pudiera llegar también a personas que no tienen una buena conexión a internet.
+
+Por eso, he intentado que sea lo más ligera posible. Incluso los videojuegos están diseñados para descargarse una sola vez, pesan aproximadamente 120 kilobytes como máximo y pueden utilizarse sin conexión.
+
+Porque de poco serviría crear una herramienta educativa gratuita si las personas que más podrían necesitarla no tuvieran cómo acceder a ella.
+
+Y aunque esta es solamente la primera versión, mi intención es seguir construyéndola. Quiero incorporar cursos preuniversitarios, universitarios y, con el tiempo, muchos otros contenidos que puedan ayudar a más personas.
+
+Sé perfectamente que una página web no va a solucionar los problemas de la educación. Y tampoco pretendo hacerlo.
+
+Pero hay una frase en la que he pensado mucho últimamente:
+
+**No puedo cambiar el mundo, pero eso no significa que no pueda hacer nada.**
+
+Y justamente hoy es mi cumpleaños.
+
+Y este año, en lugar de recibir un regalo, quise hacer algo diferente: regalar algo yo.
+
+Así que este es mi pequeño regalo para el mundo. Es algo en lo que he puesto mucho tiempo, esfuerzo y cariño, y espero de verdad que pueda serle útil a alguien.
+
+Y aquí es donde necesito de tu ayuda.
+
+Si puedes compartir Yachakuq, quizás logremos que llegue a alguien que lo necesite. A alguien que quiera aprender, pero que por cualquier motivo no haya tenido la oportunidad de recibir la ayuda que necesitaba.
+
+Eso es todo. Muchas gracias por escucharme.
+
+Y espero que este pequeño proyecto pueda ayudar a muchas personas.`;
+
+const $ = id => document.getElementById(id);
+const stage = $('stage'), textEl = $('text'), root = document.documentElement;
+
+// Preferencias guardadas (si el navegador lo permite)
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('tp_' + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem('tp_' + k, JSON.stringify(v)); } catch {} }
+};
+const S = {
+  speed: store.get('speed', 4), size: store.get('size', 56), width: store.get('width', 80),
+  guide: store.get('guide', 35), align: store.get('align', 'left'), showGuide: store.get('showGuide', true),
+  mirror: store.get('mirror', false), countdown: store.get('countdown', true),
+  text: store.get('text', ORIGINAL)
+};
+
+function esc(s) { return s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function render() {
+  textEl.innerHTML = S.text.split(/\n\s*\n/).map(p =>
+    '<p>' + esc(p.trim()).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>') + '</p>'
+  ).join('');
+}
+function apply() {
+  root.style.setProperty('--size', S.size + 'px');
+  root.style.setProperty('--width', S.width + 'vw');
+  root.style.setProperty('--guide', S.guide + '%');
+  root.style.setProperty('--gtop', S.guide + 'vh');
+  root.style.setProperty('--align', S.align);
+  $('speed').value = S.speed; $('speedVal').textContent = S.speed;
+  $('size').value = S.size; $('sizeVal').textContent = S.size + ' px';
+  $('width').value = S.width; $('widthVal').textContent = S.width + '%';
+  $('guidePos').value = S.guide; $('guideVal').textContent = S.guide + '% desde arriba';
+  $('alignBtn').textContent = S.align === 'left' ? 'Centrar' : 'Alinear izq.';
+  $('guideBtn').classList.toggle('on', S.showGuide);
+  document.body.classList.toggle('noguide', !S.showGuide);
+  $('mirrorBtn').classList.toggle('on', S.mirror);
+  document.body.classList.toggle('mirror', S.mirror);
+  $('countBtn').classList.toggle('on', S.countdown);
+  for (const k of ['speed','size','width','guide','align','showGuide','mirror','countdown']) store.set(k, S[k]);
+}
+
+// Desplazamiento
+let playing = false, last = 0, pos = 0, cdTimer = null;
+function pxPerSec() { return S.speed * S.size * 0.12; } // escala con el tamaño de letra
+function tick(t) {
+  if (!playing) return;
+  const dt = last ? (t - last) / 1000 : 0; last = t;
+  pos += pxPerSec() * dt;
+  const max = stage.scrollHeight - stage.clientHeight;
+  if (pos >= max) { pos = max; stop(); }
+  stage.scrollTop = pos;
+  requestAnimationFrame(tick);
+}
+function start() {
+  if (playing || cdTimer) return;
+  const go = () => { playing = true; last = 0; pos = stage.scrollTop; document.body.classList.add('playing');
+    $('play').textContent = '❚❚ Pausar'; requestAnimationFrame(tick); };
+  if (S.countdown) {
+    let n = 3; const cd = $('countdown'); cd.style.display = 'flex'; cd.textContent = n;
+    $('play').textContent = '✕ Cancelar';
+    cdTimer = setInterval(() => {
+      n--; if (n > 0) { cd.textContent = n; return; }
+      clearInterval(cdTimer); cdTimer = null; cd.style.display = 'none'; go();
+    }, 1000);
+  } else go();
+}
+function stop() {
+  if (cdTimer) { clearInterval(cdTimer); cdTimer = null; $('countdown').style.display = 'none'; }
+  playing = false; document.body.classList.remove('playing', 'idle'); $('play').textContent = '▶ Iniciar';
+}
+function toggle() { (playing || cdTimer) ? stop() : start(); }
+function restart() { stop(); stage.scrollTop = 0; pos = 0; }
+
+stage.addEventListener('scroll', () => {
+  if (!playing) pos = stage.scrollTop;
+  const max = stage.scrollHeight - stage.clientHeight;
+  $('progress').style.width = (max > 0 ? stage.scrollTop / max * 100 : 0) + '%';
+});
+stage.addEventListener('wheel', () => { if (playing) setTimeout(() => pos = stage.scrollTop, 0); }, { passive: true });
+stage.addEventListener('click', toggle);
+
+// Ocultar el panel mientras se lee
+let idleT;
+function wake() { document.body.classList.remove('idle'); clearTimeout(idleT);
+  idleT = setTimeout(() => { if (playing) document.body.classList.add('idle'); }, 2500); }
+document.addEventListener('mousemove', wake); document.addEventListener('touchstart', wake);
+
+// Controles
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+$('play').onclick = toggle;
+$('restart').onclick = restart;
+$('speed').oninput = e => { S.speed = +e.target.value; apply(); };
+$('size').oninput = e => { keepAnchor(() => { S.size = +e.target.value; apply(); }); };
+$('width').oninput = e => { keepAnchor(() => { S.width = +e.target.value; apply(); }); };
+$('guidePos').oninput = e => { S.guide = +e.target.value; apply(); };
+$('alignBtn').onclick = () => { S.align = S.align === 'left' ? 'center' : 'left'; apply(); };
+$('guideBtn').onclick = () => { S.showGuide = !S.showGuide; apply(); };
+$('mirrorBtn').onclick = () => { S.mirror = !S.mirror; apply(); };
+$('countBtn').onclick = () => { S.countdown = !S.countdown; apply(); };
+$('fsBtn').onclick = fullscreen;
+function fullscreen() {
+  if (document.fullscreenElement) document.exitFullscreen();
+  else document.documentElement.requestFullscreen?.();
+}
+// Mantener el punto de lectura al cambiar tamaño de letra
+function keepAnchor(fn) {
+  const max = stage.scrollHeight - stage.clientHeight, ratio = max > 0 ? stage.scrollTop / max : 0;
+  fn();
+  requestAnimationFrame(() => { const m = stage.scrollHeight - stage.clientHeight; stage.scrollTop = pos = ratio * m; });
+}
+
+// Editor
+$('editBtn').onclick = () => { stop(); $('src').value = S.text; $('editor').style.display = 'flex'; $('src').focus(); };
+$('cancelEdit').onclick = () => { $('editor').style.display = 'none'; };
+$('resetText').onclick = () => { $('src').value = ORIGINAL; };
+$('saveEdit').onclick = () => { S.text = $('src').value; store.set('text', S.text); render();
+  $('editor').style.display = 'none'; restart(); };
+
+// Teclado
+document.addEventListener('keydown', e => {
+  if ($('editor').style.display === 'flex') { if (e.key === 'Escape') $('cancelEdit').click(); return; }
+  if (e.target.tagName === 'INPUT' && e.key !== ' ') return;
+  const k = e.key;
+  if (k === ' ') { e.preventDefault(); toggle(); }
+  else if (k === 'ArrowUp') { e.preventDefault(); S.speed = clamp(S.speed + 0.5, 1, 20); apply(); }
+  else if (k === 'ArrowDown') { e.preventDefault(); S.speed = clamp(S.speed - 0.5, 1, 20); apply(); }
+  else if (k === '+' || k === '=') keepAnchor(() => { S.size = clamp(S.size + 4, 24, 140); apply(); });
+  else if (k === '-' || k === '_') keepAnchor(() => { S.size = clamp(S.size - 4, 24, 140); apply(); });
+  else if (k === 'r' || k === 'R') restart();
+  else if (k === 'f' || k === 'F') fullscreen();
+  else if (k === 'm' || k === 'M') { S.mirror = !S.mirror; apply(); }
+  else if (k === 'PageDown') { stage.scrollTop += stage.clientHeight * 0.5; }
+  else if (k === 'PageUp') { stage.scrollTop -= stage.clientHeight * 0.5; }
+  else if (k === 'Escape') stop();
+});
+
+render(); apply();
+</script>
+</body>
+</html>
