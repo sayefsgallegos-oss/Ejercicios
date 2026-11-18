@@ -89,6 +89,7 @@ create table if not exists public.equipo (
   id      bigint generated always as identity primary key,
   nombre  text not null,
   cargo   text,
+  grupo   text,
   foto    text not null,
   orden   int not null default 0,
   activo  boolean not null default true
@@ -214,3 +215,6 @@ grant execute on function public.horarios_ocupados(date, date) to anon;
 
 -- Foto para las tarjetas de programas (Propuesta A)
 alter table public.programas add column if not exists foto_tarjeta text;
+
+-- Grupo del equipo: 'direccion' o 'administracion'
+alter table public.equipo add column if not exists grupo text;

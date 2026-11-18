@@ -543,7 +543,8 @@
   async function pintarEquipo() {
     const lugar = $("#equipo");
     if (!lugar) return;
-    const equipo = await leerTabla("equipo");
+    const excluir = (lugar.dataset.excluir || "").split(",").filter(Boolean); // ej. data-excluir="direccion"
+    const equipo = (await leerTabla("equipo")).filter((x) => !excluir.includes(x.grupo));
     const tarjeta = (x, copia) => `
       <figure class="persona"${copia ? ' aria-hidden="true"' : ""}>
         <img src="${esc(x.foto)}" alt="${copia ? "" : esc(x.nombre)}" width="190" height="190" loading="lazy">

@@ -445,3 +445,31 @@
 .pa-videos { grid-template-columns: 2fr 1fr; align-items: start; }
 .pa-videos-lista { gap: 1rem; }
 @media (max-width: 900px) { .pa-videos { grid-template-columns: 1fr; } .pa-videos-lista { grid-template-columns: 1fr 1fr; } }
+
+/* ---------- Dirección, Marco en YouTube y video "por qué elegirnos" ---------- */
+.pa-lideres { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+.pa-lider { display: flex; gap: 1.2rem; align-items: center; background: #fff; border: 1px solid var(--linea); border-radius: 20px; padding: 1.2rem; box-shadow: var(--sombra); min-width: 0; }
+.pa-lider img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; flex: none; border: 4px solid var(--azul-claro); }
+.pa-lider h3 { margin: 0; font-size: 1.25rem; }
+.pa-lider-cargo { margin: .1rem 0 .5rem; color: var(--azul); font-weight: 700; font-size: .92rem; }
+.pa-lider p:last-child { margin: 0; color: var(--suave); font-size: .92rem; }
+.pa-yt { margin-top: 1.4rem; display: grid; grid-template-columns: 1fr 1.6fr; gap: 1.6rem; align-items: center; background: var(--azul-oscuro); border-radius: 20px; padding: clamp(1.2rem, 3vw, 2rem); color: #c5d3ee; }
+.pa-yt > * { min-width: 0; }
+.pa-yt .pa-eyebrow { color: #ff8a8a; }
+.pa .pa-yt h3 { color: #fff; font-size: clamp(1.2rem, 2.2vw, 1.5rem); margin: 0 0 .5rem; line-height: 1.25; }
+.pa-yt-texto > p:not(.pa-eyebrow) { margin: 0 0 1rem; font-size: .95rem; }
+.pa-yt-libros { display: flex; gap: .6rem; }
+.pa-yt-libros img { height: 92px; width: auto; border-radius: 4px; box-shadow: 0 8px 18px rgba(0,0,0,.35); }
+.pa-yt-videos { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; }
+.pa-yt-videos .video .play { width: 46px; height: 46px; }
+.pa-yt-videos .video .play::before { border-left-width: 15px; border-top-width: 9px; border-bottom-width: 9px; margin-left: 4px; }
+.pa-equipo-sub { margin: 3rem 0 0; font-size: 1.1rem; color: var(--suave) !important; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; font-family: var(--fuente) !important; }
+.pa-equipo-sub + * { }
+.pa .equipo { margin-top: 1.2rem; }
+.pa-porque { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+.pa-porque > * { min-width: 0; }
+@media (max-width: 900px) {
+  .pa-lideres, .pa-yt, .pa-porque { grid-template-columns: 1fr; }
+  .pa-yt-videos { grid-template-columns: 1fr 1fr 1fr; }
+}
+@media (max-width: 560px) { .pa-lider { flex-direction: column; text-align: center; } .pa-yt-videos { grid-template-columns: 1fr; } }

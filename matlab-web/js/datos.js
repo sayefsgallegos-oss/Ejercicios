@@ -168,25 +168,27 @@ window.MATLAB_DATOS = {
     },
   ],
 
-  /* ---------- Equipo (página Nosotros) ----------
+  /* ---------- Equipo (página Nosotros e inicio) ----------
+     grupo: "direccion" (sale en las tarjetas grandes de la Propuesta A),
+            "administracion" o "" (salen en la cinta animada).
      Para agregar a alguien: copia una línea, cambia nombre/cargo/foto.
      Para quitar a alguien: cambia activo: true por activo: false. */
   equipo: [
-    { nombre: "Marco Loret de Mola", cargo: "Director General", foto: "/img/equipo/marco-loret-de-mola.webp", orden: 1, activo: true },
-    { nombre: "Nidia Arana", cargo: "", foto: "/img/equipo/nidia-arana.webp", orden: 2, activo: true },
-    { nombre: "Pierre Gallegos", cargo: "", foto: "/img/equipo/pierre-gallegos.webp", orden: 3, activo: true },
-    { nombre: "Cesar Vallejo", cargo: "", foto: "/img/equipo/cesar-vallejo.webp", orden: 4, activo: true },
-    { nombre: "Leandro Salazar", cargo: "", foto: "/img/equipo/leandro-salazar.webp", orden: 5, activo: true },
-    { nombre: "Valeria Caballero", cargo: "", foto: "/img/equipo/valeria-caballero.webp", orden: 6, activo: true },
-    { nombre: "Ana Paula Chavez", cargo: "", foto: "/img/equipo/ana-paula-chavez.webp", orden: 7, activo: true },
-    { nombre: "Kiara Herrera", cargo: "", foto: "/img/equipo/kiara-herrera.webp", orden: 8, activo: true },
-    { nombre: "Alexandra Velásquez", cargo: "", foto: "/img/equipo/alexandra-velasquez.webp", orden: 9, activo: true },
-    { nombre: "Marilyn Mora", cargo: "", foto: "/img/equipo/marilyn-mora.webp", orden: 10, activo: true },
-    { nombre: "Samantha Piedra", cargo: "", foto: "/img/equipo/samantha-piedra.webp", orden: 11, activo: true },
-    { nombre: "Daniela Alamo", cargo: "", foto: "/img/equipo/daniela-alamo.webp", orden: 12, activo: true },
-    { nombre: "Verónica Alamo", cargo: "", foto: "/img/equipo/veronica-alamo.webp", orden: 13, activo: true },
-    { nombre: "Gustavo Alvarado", cargo: "", foto: "/img/equipo/gustavo-alvarado.webp", orden: 14, activo: true },
-    { nombre: "Bryan Urcia", cargo: "", foto: "/img/equipo/bryan-urcia.webp", orden: 15, activo: true },
-    { nombre: "Alexandra Vilca", cargo: "", foto: "/img/equipo/alexandra-vilca.webp", orden: 16, activo: true },
+    { nombre: "Marco Loret de Mola", cargo: "Director General", grupo: "direccion", foto: "/img/equipo/marco-loret-de-mola.webp", orden: 1, activo: true },
+    { nombre: "Nidia Arana", cargo: "Gerente", grupo: "direccion", foto: "/img/equipo/nidia-arana.webp", orden: 2, activo: true },
+    { nombre: "Pierre Gallegos", cargo: "Administración", grupo: "administracion", foto: "/img/equipo/pierre-gallegos.webp", orden: 3, activo: true },
+    { nombre: "Cesar Vallejo", cargo: "", grupo: "", foto: "/img/equipo/cesar-vallejo.webp", orden: 4, activo: true },
+    { nombre: "Leandro Salazar", cargo: "", grupo: "", foto: "/img/equipo/leandro-salazar.webp", orden: 5, activo: true },
+    { nombre: "Valeria Caballero", cargo: "Administración", grupo: "administracion", foto: "/img/equipo/valeria-caballero.webp", orden: 6, activo: true },
+    { nombre: "Ana Paula Chavez", cargo: "", grupo: "", foto: "/img/equipo/ana-paula-chavez.webp", orden: 7, activo: true },
+    { nombre: "Kiara Herrera", cargo: "Administración", grupo: "administracion", foto: "/img/equipo/kiara-herrera.webp", orden: 8, activo: true },
+    { nombre: "Alexandra Velásquez", cargo: "Administración", grupo: "administracion", foto: "/img/equipo/alexandra-velasquez.webp", orden: 9, activo: true },
+    { nombre: "Marilyn Mora", cargo: "", grupo: "", foto: "/img/equipo/marilyn-mora.webp", orden: 10, activo: true },
+    { nombre: "Samantha Piedra", cargo: "Administración", grupo: "administracion", foto: "/img/equipo/samantha-piedra.webp", orden: 11, activo: true },
+    { nombre: "Daniela Alamo", cargo: "", grupo: "", foto: "/img/equipo/daniela-alamo.webp", orden: 12, activo: true },
+    { nombre: "Verónica Alamo", cargo: "Administración", grupo: "administracion", foto: "/img/equipo/veronica-alamo.webp", orden: 13, activo: true },
+    { nombre: "Gustavo Alvarado", cargo: "Administración", grupo: "administracion", foto: "/img/equipo/gustavo-alvarado.webp", orden: 14, activo: true },
+    { nombre: "Bryan Urcia", cargo: "Administración", grupo: "administracion", foto: "/img/equipo/bryan-urcia.webp", orden: 15, activo: true },
+    { nombre: "Alexandra Vilca", cargo: "Administración", grupo: "administracion", foto: "/img/equipo/alexandra-vilca.webp", orden: 16, activo: true },
   ],
 };

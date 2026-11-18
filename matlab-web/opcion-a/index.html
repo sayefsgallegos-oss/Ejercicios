@@ -111,6 +111,19 @@
       </div>
     </section>
 
+    <!-- ============ POR QUÉ ELEGIRNOS (video para padres) ============ -->
+    <section class="pa-seccion" id="por-que">
+      <div class="pa-ancho pa-porque">
+        <div>
+          <p class="pa-eyebrow">Un mensaje para las familias</p>
+          <h2 class="pa-h2">¿Por qué inscribir a tu hijo <span>con nosotros?</span></h2>
+          <p class="pa-intro" style="margin-inline:0">En este video te contamos lo que más nos importa de cada alumno y cómo lo acompañamos para que avance con confianza, no solo para aprobar.</p>
+          <a class="pa-btn pa-btn-primario" href="#reserva">Reserva su primera clase <span aria-hidden="true">→</span></a>
+        </div>
+        <div data-video="PUx7Ddgve3A" data-miniatura="/img/videos/home.webp" data-titulo="¿Por qué estudiar con nosotros?"></div>
+      </div>
+    </section>
+
     <!-- ============ SEGUIMIENTO ============ -->
     <section class="pa-seccion" id="seguimiento">
       <div class="pa-ancho pa-seg-grid">
@@ -247,37 +260,53 @@
       </div>
     </section>
 
-    <!-- ============ EQUIPO REAL (lista editable en js/datos.js o Supabase, tabla "equipo") ============ -->
+    <!-- ============ EQUIPO (lista editable en js/datos.js o Supabase, tabla "equipo") ============ -->
     <section class="pa-seccion pa-fondo-suave" id="equipo-real">
-      <div class="pa-ancho pa-equipo-cab">
-        <div>
-          <p class="pa-eyebrow">Nuestro equipo</p>
-          <h2 class="pa-h2">Conoce a quienes <span>enseñan a tu hijo</span></h2>
-          <p class="pa-intro" style="margin-inline:0">Profesores reales, especialistas en matemática y educación financiera, que acompañan a más de 12 000 alumnos desde hace 14 años.</p>
-        </div>
-        <figure class="pa-director">
-          <img src="/img/equipo/marco-director.webp" alt="Marco Loret de Mola, director general de matLab" width="700" height="761" loading="lazy">
-          <figcaption><strong>Marco Loret de Mola</strong>Director general</figcaption>
-        </figure>
-      </div>
-      <div class="equipo" id="equipo" aria-label="Profesores de matLab"></div>
-    </section>
-
-    <!-- ============ VIDEOS REALES ============ -->
-    <section class="pa-seccion" id="videos">
       <div class="pa-ancho">
-        <p class="pa-eyebrow">Míralo tú mismo</p>
-        <h2 class="pa-h2">Así enseñamos <span>en matLab</span></h2>
-        <p class="pa-intro">Videos de nuestro equipo: cómo son las clases y por qué las familias nos eligen.</p>
-        <div class="pa-videos">
-          <div class="pa-video-grande" data-video="PUx7Ddgve3A" data-miniatura="/img/videos/home.webp" data-titulo="¿Por qué estudiar con nosotros?"></div>
-          <div class="pa-videos-lista">
-            <div data-video="JQA3hZPN9T4" data-miniatura="/img/videos/testimonio-1.webp" data-titulo="Video del equipo matLab 1"></div>
-            <div data-video="RgZsUta_LA4" data-miniatura="/img/videos/testimonio-2.webp" data-titulo="Video del equipo matLab 2"></div>
+        <p class="pa-eyebrow">Nuestro equipo</p>
+        <h2 class="pa-h2">Conoce al equipo <span>detrás de matLab</span></h2>
+        <p class="pa-intro">Las personas que hacen posible que más de 12 000 alumnos aprendan con nosotros desde hace 14 años.</p>
+
+        <div class="pa-lideres">
+          <article class="pa-lider aparece">
+            <img src="/img/equipo/marco-loret-de-mola.webp" alt="Marco Loret de Mola" width="336" height="344" loading="lazy">
+            <div>
+              <h3>Marco Loret de Mola</h3>
+              <p class="pa-lider-cargo">Director General</p>
+              <p>Divulgador de educación financiera y autor de <em>Tu éxito financiero con Manzanitas</em> y <em>Los Tec X</em>.</p>
+            </div>
+          </article>
+          <article class="pa-lider aparece">
+            <img src="/img/equipo/nidia-arana.webp" alt="Nidia Arana" width="336" height="344" loading="lazy">
+            <div>
+              <h3>Nidia Arana</h3>
+              <p class="pa-lider-cargo">Gerente</p>
+              <p>Lidera el día a día de matLab y el acompañamiento a cada familia.</p>
+            </div>
+          </article>
+        </div>
+
+        <!-- Marco en YouTube (proyecto personal del director) -->
+        <div class="pa-yt aparece">
+          <div class="pa-yt-texto">
+            <p class="pa-eyebrow">Nuestro director en YouTube</p>
+            <h3>Quizás ya lo conoces: Marco enseña finanzas a miles de personas</h3>
+            <p>Además de dirigir matLab, Marco comparte educación financiera en su canal de YouTube y en sus libros.</p>
+            <div class="pa-yt-libros" aria-hidden="true">
+              <img src="/img/libros/manzanitas.webp" alt="" width="264" height="319" loading="lazy">
+              <img src="/img/libros/los-tec-x.webp" alt="" width="400" height="662" loading="lazy">
+            </div>
+          </div>
+          <div class="pa-yt-videos">
+            <div data-video="JQA3hZPN9T4" data-miniatura="/img/videos/testimonio-1.webp" data-titulo="Video de Marco Loret de Mola: miedo de pedir préstamo hipotecario"></div>
+            <div data-video="RgZsUta_LA4" data-miniatura="/img/videos/testimonio-2.webp" data-titulo="Video de Marco Loret de Mola: nuestra oportunidad es ahora"></div>
+            <div data-video="AjX5ylXbaPU" data-miniatura="/img/videos/testimonio-3.webp" data-titulo="Video de Marco Loret de Mola: aprende a controlar tu dinero"></div>
           </div>
         </div>
-        <p class="pa-canal">Más videos en nuestro canal: <a href="https://www.youtube.com/@matlab_peru/videos" target="_blank" rel="noopener">youtube.com/@matlab_peru</a></p>
       </div>
+
+      <div class="pa-ancho"><h3 class="pa-equipo-sub">Equipo matLab</h3></div>
+      <div class="equipo" id="equipo" data-excluir="direccion" aria-label="Equipo de matLab"></div>
     </section>
 
     <!-- ============ MATTI Y NUMI ============ -->
