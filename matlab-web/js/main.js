@@ -144,6 +144,7 @@
                   <li><a class="sub-titulo" href="/programas/talleres-grupales/">Grupales <i class="flecha-der"></i></a><ul class="submenu">${grupales}</ul></li>
                 </ul>
               </li>
+              ${progs.filter((p) => p.en_menu).map((p) => `<li><a class="menu-destacado" href="${esc(p.url)}"${activo(ruta.startsWith(p.url))}>☀️ ${esc(p.nombre)}</a></li>`).join("")}
               <li><a href="/nosotros/"${activo(ruta.startsWith("/nosotros"))}>Nosotros</a></li>
               <li><a class="boton boton-rojo boton-reservar${ruta.startsWith("/reserva-tu-clase") ? " activo" : ""}" href="/reserva-tu-clase/">📅 Reserva tu clase</a></li>
               <li><a class="boton boton-verde" href="/contactanos/">Contáctanos</a></li>
@@ -336,7 +337,7 @@
      ------------------------------------------------------------------ */
   function htmlVideo(id, miniatura, titulo = "Ver video") {
     return `<button class="video" type="button" data-youtube="${esc(id)}" aria-label="${esc(titulo)}">
-      <img src="${esc(miniatura || `https://i.ytimg.com/vi/${id}/hqdefault.jpg`)}" alt="" loading="lazy"><span class="play"></span></button>`;
+      <img src="${esc(miniatura || `https://i.ytimg.com/vi/${id}/hqdefault.jpg`)}" onerror="this.onerror=null;this.src='/img/videos/home.webp'" alt="" loading="lazy"><span class="play"></span></button>`;
   }
   document.addEventListener("click", (e) => {
     const v = e.target.closest(".video[data-youtube]");
@@ -356,7 +357,7 @@
   const opciones = (lista, placeholder) => `<option value="">${esc(placeholder)}</option>` + lista.map((o) => `<option>${esc(o)}</option>`).join("");
   const campo = (html, error = "Completa este campo") => `<div class="campo">${html}<div class="mensaje-error">${error}</div></div>`;
 
-  async function htmlFormulario(tipo, programa) {
+  async function htmlFormulario(tipo, programa, prog) {
     const progs = await programas();
     let campos = "";
     const nombreCompleto = campo('<label class="solo-lectores" for="f-nombre">Nombres y apellidos</label><input id="f-nombre" name="nombre" placeholder="Nombres y apellidos" autocomplete="name" required>');
@@ -373,6 +374,11 @@
       campos = nombreCompleto + celular + grado +
         campo(`<label class="solo-lectores" for="f-frecuencia">Frecuencia</label><select id="f-frecuencia" name="frecuencia" required>${opciones(Object.keys(C.horariosGrupales), "Frecuencia de interés*")}</select>`, "Elige una frecuencia") +
         campo(`<label class="solo-lectores" for="f-horario">Horario</label><select id="f-horario" name="horario" required disabled><option value="">Horario de interés* (elige frecuencia)</option></select>`, "Elige un horario");
+    } else if (tipo === "verano") {
+      const grados = C.grados.slice(prog?.grados_desde || 0);
+      campos = nombreCompleto + celular +
+        campo(`<label class="solo-lectores" for="f-grado">Grado</label><select id="f-grado" name="grado" required>${opciones(grados, "Grado*")}</select>`, "Elige el grado") +
+        campo(`<label class="solo-lectores" for="f-curso">Curso de interés</label><select id="f-curso" name="servicio" required>${opciones((prog?.cursos || []).map((c) => c.form || c.titulo), "Curso de interés*")}</select>`, "Elige un curso");
     } else if (tipo === "contacto") {
       campos =
         campo('<label class="solo-lectores" for="f-nombre">Nombres</label><input id="f-nombre" name="nombre" placeholder="Nombres" autocomplete="given-name" required>') +
@@ -479,7 +485,7 @@
     for (const lugar of $$("[data-formulario]")) {
       const tipo = lugar.dataset.formulario;
       const prog = lugar.dataset.programa ? (await programas()).find((p) => p.slug === lugar.dataset.programa) : null;
-      lugar.innerHTML = await htmlFormulario(tipo, prog?.nombre);
+      lugar.innerHTML = await htmlFormulario(tipo, prog?.nombre, prog);
       activarFormulario($("form", lugar), prog);
     }
   }
@@ -513,6 +519,7 @@
             <p class="frase">El aprendizaje se convierte en un emocionante viaje compartido.<br>¡Despierta la magia de los números con su <span class="amarillo">compañero de clase</span>!</p>
             ${p.video_youtube ? htmlVideo(p.video_youtube, p.video_miniatura, `Ver video de ${p.nombre}`) : ""}
             ${p.beneficios?.length ? `<ul class="checks chicos beneficios">${p.beneficios.map((b) => `<li>${esc(b)}</li>`).join("")}</ul>` : ""}
+            ${p.cursos?.length ? `<h2 class="cursos-titulo">¡Nuestros cursos!</h2><div class="cursos">${p.cursos.map((c) => `<article class="curso"><h3>${esc(c.titulo)}</h3><p>${esc(c.texto)}</p></article>`).join("")}</div>` : ""}
             ${p.libros?.length ? `<div class="libros"><div class="portadas">${p.libros.map((l) => `<img src="${esc(l.imagen)}" alt="Libro ${esc(l.titulo)}" loading="lazy">`).join("")}</div>
               <p>Programa desarrollado a partir de los libros ${p.libros.map((l) => `<strong>“${esc(l.titulo)}”</strong>`).join(" y ")} de Marco Loret de Mola.</p></div>` : ""}
             <div class="especificaciones">
@@ -961,6 +968,39 @@
   }
 
   /* ------------------------------------------------------------------
+     TESTIMONIOS DE PADRES (capturas) — <div data-testimonios></div>
+     ------------------------------------------------------------------ */
+  function pintarTestimonios() {
+    const lugares = $$("[data-testimonios]");
+    if (!lugares.length) return;
+    const lista = (window.MATLAB_DATOS.testimonios || []).filter((t) => t.activo !== false).sort((a, b) => a.orden - b.orden);
+    lugares.forEach((lugar) => {
+      lugar.innerHTML = `
+        <div class="testi-pista" tabindex="0" aria-label="Testimonios de padres de familia">
+          ${lista.map((t, i) => `<button type="button" class="testi" data-i="${i}" aria-label="Ver testimonio: ${esc(t.titulo)}"><img src="${esc(t.imagen)}" alt="${esc(t.titulo)}" width="540" height="960" loading="lazy"></button>`).join("")}
+        </div>
+        <div class="testi-ctrl"><button type="button" class="testi-flecha" data-dir="-1" aria-label="Anteriores">‹</button><button type="button" class="testi-flecha" data-dir="1" aria-label="Siguientes">›</button></div>`;
+      const pista = $(".testi-pista", lugar);
+      $$(".testi-flecha", lugar).forEach((b) => b.addEventListener("click", () => pista.scrollBy({ left: Number(b.dataset.dir) * pista.clientWidth * 0.8, behavior: "smooth" })));
+    });
+    let dlg = $("#testi-dialogo");
+    if (!dlg) {
+      dlg = document.createElement("dialog");
+      dlg.id = "testi-dialogo";
+      dlg.innerHTML = '<button type="button" class="testi-cerrar" aria-label="Cerrar">✕</button><img alt="">';
+      document.body.appendChild(dlg);
+      dlg.addEventListener("click", (e) => { if (e.target === dlg || e.target.closest(".testi-cerrar")) dlg.close(); });
+    }
+    document.addEventListener("click", (e) => {
+      const b = e.target.closest(".testi");
+      if (!b) return;
+      const t = lista[Number(b.dataset.i)];
+      const img = $("img", dlg); img.src = t.imagen; img.alt = t.titulo;
+      if (dlg.showModal) dlg.showModal(); else window.open(t.imagen, "_blank");
+    });
+  }
+
+  /* ------------------------------------------------------------------
      EFECTOS: contadores y aparición al hacer scroll
      ------------------------------------------------------------------ */
   function activarEfectos() {
@@ -1001,6 +1041,7 @@
     pintarSelectorPropuestas();
     activarPortadas();
     activarInformeDemo();
+    pintarTestimonios();
     activarEfectos();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iniciar); else iniciar();

@@ -9,6 +9,7 @@ window.MATLAB_DATOS = {
 
   /* ---------- Carrusel del inicio ---------- */
   banners: [
+    { titulo: "Mate Verano - ¡Asegura su cupo 2027! Cálculo mental, finanzas y razonamiento matemático", imagen: "/img/banners/verano.webp", imagen_movil: "/img/banners/verano-movil.webp", link: "/programas/talleres-grupales/mateverano/", orden: 0, activo: true },
     { titulo: "matLab Power - Refuerza las mates paso a paso", imagen: "/img/banners/power.webp", imagen_movil: "/img/banners/power-movil.webp", link: "/programas/integrales-individuales/programa-mensual-power/", orden: 1, activo: true },
     { titulo: "matLab Élite - Alcanza su máximo potencial todo el año", imagen: "/img/banners/elite.webp", imagen_movil: "/img/banners/elite-movil.webp", link: "/programas/integrales-individuales/programa-anual-elite/", orden: 2, activo: true },
     { titulo: "matLab Finanzas - Construye su futuro financiero", imagen: "/img/banners/finanzas.webp", imagen_movil: "/img/banners/finanzas-movil.webp", link: "/programas/talleres-grupales/finanzas-para-jovenes/", orden: 3, activo: true },
@@ -151,6 +152,40 @@ window.MATLAB_DATOS = {
       en_home: true, activo: true, orden: 4,
     },
     {
+      slug: "mateverano",
+      nombre: "Mateverano",
+      tipo: "grupal",
+      etiqueta: "Talleres de verano",
+      url: "/programas/talleres-grupales/mateverano/",
+      resumen: "Talleres grupales de verano: razonamiento matemático, cálculo mental, finanzas y listos para el cole.",
+      descripcion: "Complementa sus vacaciones con talleres en vivo para llegar con todo al próximo año. ¡Asegura su cupo 2027!",
+      imagen: "/img/programas/mateverano.webp",
+      foto_tarjeta: "/img/programas/mateverano.webp",
+      datos: [
+        { icono: "virtual", texto: "Clases 100% virtuales" },
+        { icono: "grupo", texto: "Grupos pequeños" },
+        { icono: "reloj", texto: "50 minutos por clase" },
+        { icono: "clases", texto: "Turnos mañana, tarde y noche" },
+      ],
+      // Cursos del verano: aparecen en la página y en el formulario ("curso de interés")
+      cursos: [
+        { titulo: "Razonamiento Matemático", texto: "Herramientas efectivas para su pensamiento lógico.", form: "Razonamiento Matemático" },
+        { titulo: "Cálculo Mental", texto: "Calcula con más rapidez, agilidad y seguridad.", form: "Cálculo Mental" },
+        { titulo: "Finanzas", texto: "Aprende a ahorrar y administrar su dinero desde joven.", form: "Finanzas Verano" },
+        { titulo: "Listos para el Cole", texto: "Refuerza sus bases para el próximo grado en solo un mes.", form: "Listos para el Cole" },
+      ],
+      video_youtube: "kUC_t1u_rYs",
+      video_miniatura: "", // vacío = usa la miniatura de YouTube
+      beneficios: [],
+      libros: [],
+      para_quien: "3.° de primaria a 5.° de secundaria",
+      disponibilidad: "mañana, tarde y noche",
+      whatsapp_mensaje: "Hola 😎!! Quisiera mas información sobre sus programas de verano ☀️⛱️",
+      formulario: "verano",
+      grados_desde: 2, // el formulario muestra desde 3er grado de primaria
+      en_home: false, en_menu: true, activo: true, orden: 5,
+    },
+    {
       slug: "clase-sos",
       nombre: "Clase S.O.S.",
       tipo: "sos",
@@ -164,8 +199,28 @@ window.MATLAB_DATOS = {
       video_miniatura: "/img/videos/sos.webp",
       whatsapp_mensaje: "Hola vengo de la página web, quiero más información de su Clase de Emergencia S.O.S 🚨.",
       formulario: "sos",
-      en_home: false, activo: true, orden: 5,
+      en_home: false, activo: true, orden: 6,
     },
+  ],
+
+  /* ---------- Testimonios de padres (capturas de WhatsApp) ----------
+     Para agregar uno: sube la imagen vertical a img/testimonios/ y copia una línea. */
+  testimonios: [
+    { titulo: "¡Adri pasó de B a todo A!", imagen: "/img/testimonios/t01.webp", orden: 1, activo: true },
+    { titulo: "¡Ignacio y Facu, más que felices con Matlab!", imagen: "/img/testimonios/t02.webp", orden: 2, activo: true },
+    { titulo: "¡Nuestra Matlover mejoró sus notas!", imagen: "/img/testimonios/t03.webp", orden: 3, activo: true },
+    { titulo: "¡Nuestros profes le ponen corazón a cada clase!", imagen: "/img/testimonios/t04.webp", orden: 4, activo: true },
+    { titulo: "¡Gaby salió muy bien este bimestre!", imagen: "/img/testimonios/t05.webp", orden: 5, activo: true },
+    { titulo: "¡Carlos contento con su profe Matlab!", imagen: "/img/testimonios/t06.webp", orden: 6, activo: true },
+    { titulo: "¡Andre, mejorando cada bimestre!", imagen: "/img/testimonios/t07.webp", orden: 7, activo: true },
+    { titulo: "¡Álvaro logró ingresar a la universidad!", imagen: "/img/testimonios/t08.webp", orden: 8, activo: true },
+    { titulo: "¡Gracias por sus comentarios!", imagen: "/img/testimonios/t09.webp", orden: 9, activo: true },
+    { titulo: "¡Resultados que hablan por sí solos!", imagen: "/img/testimonios/t10.webp", orden: 10, activo: true },
+    { titulo: "¡Gracias por confiar en nosotros!", imagen: "/img/testimonios/t11.webp", orden: 11, activo: true },
+    { titulo: "¡Nuestro Taller Financiero es un éxito!", imagen: "/img/testimonios/t12.webp", orden: 12, activo: true },
+    { titulo: "Nuestros estudiantes, más que agradecidos", imagen: "/img/testimonios/t13.webp", orden: 13, activo: true },
+    { titulo: "¡Nuestra metodología Matlab es la mejor!", imagen: "/img/testimonios/t14.webp", orden: 14, activo: true },
+    { titulo: "¡Muchas gracias por la confianza!", imagen: "/img/testimonios/t15.webp", orden: 15, activo: true },
   ],
 
   /* ---------- Equipo (página Nosotros e inicio) ----------

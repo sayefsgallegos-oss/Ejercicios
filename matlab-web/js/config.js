@@ -47,9 +47,12 @@ window.MATLAB_CONFIG = {
      activo: true lo muestra, false lo oculta. */
   avisoTemporada: {
     activo: true,
-    texto: "🚨 ¿Exámenes finales? Ayudamos a tu hijo a <strong>salvar el año</strong> con clases de emergencia.",
-    boton: "Reserva tu clase S.O.S.",
-    link: "/clases-de-emergencia/",
+    texto: "☀️ <strong>Mateverano 2027:</strong> cálculo mental, finanzas, razonamiento matemático y listos para el cole.",
+    boton: "Asegura su cupo",
+    link: "/programas/talleres-grupales/mateverano/",
+    /* Para la temporada de exámenes usa por ejemplo:
+       texto: "🚨 ¿Exámenes finales? Ayudamos a tu hijo a <strong>salvar el año</strong> con clases de emergencia.",
+       boton: "Reserva tu clase S.O.S.", link: "/clases-de-emergencia/", */
   },
 
   /* ---------- Programas que se dan solo a pedido ----------

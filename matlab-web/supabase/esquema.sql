@@ -218,3 +218,10 @@ alter table public.programas add column if not exists foto_tarjeta text;
 
 -- Grupo del equipo: 'direccion' o 'administracion'
 alter table public.equipo add column if not exists grupo text;
+
+-- Mateverano: cursos del programa y enlace propio en el menú
+alter table public.programas add column if not exists cursos jsonb not null default '[]';
+alter table public.programas add column if not exists en_menu boolean not null default false;
+alter table public.programas add column if not exists grados_desde int not null default 0;
+alter table public.programas drop constraint if exists programas_formulario_check;
+alter table public.programas add constraint programas_formulario_check check (formulario in ('individual','grupal','sos','home','verano'));

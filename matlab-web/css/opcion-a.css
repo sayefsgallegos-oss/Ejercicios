@@ -475,3 +475,19 @@
 @media (max-width: 560px) { .pa-lider { flex-direction: column; text-align: center; } .pa-yt-videos { grid-template-columns: 1fr; } }
 .pa-btn-yt { background: #ff0033; color: #fff; margin-bottom: 1.2rem; }
 .pa-btn-yt:hover { background: #d9002b; }
+
+/* ---------- Verano y testimonios (Propuesta A) ---------- */
+.pa-verano { margin-top: 2rem; display: grid; grid-template-columns: 1.3fr 1fr; align-items: end; gap: 1rem 2rem; background: linear-gradient(135deg, #fff6d6, #ffe7a3); border-radius: 20px; padding: clamp(1.5rem, 4vw, 2.4rem) clamp(1.5rem, 4vw, 2.4rem) 0; overflow: hidden; border: 1px solid #ffe08a; }
+.pa-verano > * { min-width: 0; }
+.pa-verano-texto { padding-bottom: clamp(1.5rem, 4vw, 2.4rem); }
+.pa-verano .pa-eyebrow { color: #b45309; }
+.pa .pa-verano h3 { font-size: clamp(1.5rem, 2.8vw, 2rem); margin: 0 0 .5rem; letter-spacing: -.02em; }
+.pa-verano-texto > p:not(.pa-eyebrow) { color: #5c4a12; margin: 0 0 1.2rem; }
+.pa-verano-cursos { list-style: none; padding: 0; margin: 0 0 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+.pa-verano-cursos li { background: rgba(255,255,255,.8); border-radius: 12px; padding: .7rem .9rem; font-size: .85rem; color: var(--suave); }
+.pa-verano-cursos strong { display: block; color: var(--azul-oscuro); font-size: .95rem; }
+.pa-verano img { width: 100%; height: auto; max-height: 400px; object-fit: contain; object-position: bottom; }
+@media (max-width: 860px) { .pa-verano { grid-template-columns: 1fr; } .pa-verano img { max-height: 260px; } .pa-verano-cursos { grid-template-columns: 1fr; } }
+.pa .testi { box-shadow: var(--sombra); border: 1px solid var(--linea); }
+.pa .testi-flecha { color: var(--azul-oscuro); border: 1px solid var(--linea); }
+.pa .menu-destacado { font-weight: 700; }
