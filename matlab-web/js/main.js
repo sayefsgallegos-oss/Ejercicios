@@ -930,6 +930,34 @@
   }
 
   /* ------------------------------------------------------------------
+     INFORME DE EJEMPLO (Propuesta A): las pestañas cambian los números
+     ------------------------------------------------------------------ */
+  function activarInformeDemo() {
+    const inf = $("#informe-demo");
+    if (!inf) return;
+    const DATOS = {
+      todo: { actitud: 95, puntualidad: 88, asistidas: 34, total: 36, faltas: 2 },
+      mes: { actitud: 97, puntualidad: 92, asistidas: 8, total: 8, faltas: 0 },
+      ocho: { actitud: 98, puntualidad: 90, asistidas: 8, total: 8, faltas: 0 },
+    };
+    const etiqueta = (v) => (v >= 95 ? "¡Excelente!" : v >= 85 ? "Muy bien" : "Puede mejorar");
+    const pintar = (clave) => {
+      const d = DATOS[clave];
+      ["actitud", "puntualidad"].forEach((m) => {
+        $(`[data-met="${m}"]`, inf).textContent = d[m] + "%";
+        $(`[data-etq="${m}"]`, inf).textContent = etiqueta(d[m]);
+        const llenos = Math.round((d[m] / 100) * 20);
+        $$(`[data-seg="${m}"] i`, inf).forEach((i, k) => i.classList.toggle("on", k < llenos));
+      });
+      ["asistidas", "total", "faltas"].forEach((m) => { $(`[data-met="${m}"]`, inf).textContent = d[m]; });
+    };
+    $$(".inf-tabs button", inf).forEach((b) => b.addEventListener("click", () => {
+      $$(".inf-tabs button", inf).forEach((x) => { const on = x === b; x.classList.toggle("activo", on); x.setAttribute("aria-selected", String(on)); });
+      pintar(b.dataset.periodo);
+    }));
+  }
+
+  /* ------------------------------------------------------------------
      EFECTOS: contadores y aparición al hacer scroll
      ------------------------------------------------------------------ */
   function activarEfectos() {
@@ -969,6 +997,7 @@
     pintarWhatsappFlotante();
     pintarSelectorPropuestas();
     activarPortadas();
+    activarInformeDemo();
     activarEfectos();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iniciar); else iniciar();
