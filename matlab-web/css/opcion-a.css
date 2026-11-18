@@ -405,3 +405,10 @@
 @media (max-width: 860px) { .pa-sos-banda { grid-template-columns: 1fr; } .pa-sos-banda img { min-height: 0; aspect-ratio: 3 / 2; } }
 .pa-sos-banda.sin-foto { grid-template-columns: 1fr; }
 .pa-sos-banda.sin-foto .pa-sos-texto { max-width: 720px; }
+
+/* ---------- Empresas ---------- */
+.pa-empresas { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+.pa-empresas > * { min-width: 0; }
+.pa-empresas img { width: 100%; height: auto; border-radius: 20px; box-shadow: var(--sombra); display: block; }
+@media (max-width: 900px) { .pa-empresas { grid-template-columns: 1fr; } .pa-empresas .pa-btn { width: 100%; } }
+.pa-sos-banda img { object-position: center 40%; }
