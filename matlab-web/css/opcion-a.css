@@ -473,3 +473,5 @@
   .pa-yt-videos { grid-template-columns: 1fr 1fr 1fr; }
 }
 @media (max-width: 560px) { .pa-lider { flex-direction: column; text-align: center; } .pa-yt-videos { grid-template-columns: 1fr; } }
+.pa-btn-yt { background: #ff0033; color: #fff; margin-bottom: 1.2rem; }
+.pa-btn-yt:hover { background: #d9002b; }
