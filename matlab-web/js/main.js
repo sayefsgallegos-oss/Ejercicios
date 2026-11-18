@@ -979,7 +979,8 @@
     };
     const reiniciar = () => {
       clearInterval(timer);
-      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) timer = setInterval(() => ir(actual + 1), 7000);
+      // En celular no cambia sola: cada portada tiene distinta altura y movería la página
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches && !matchMedia("(max-width: 960px)").matches) timer = setInterval(() => ir(actual + 1), 7000);
     };
     $$(".pa-flecha", car).forEach((b) => b.addEventListener("click", () => { ir(actual + Number(b.dataset.dir)); reiniciar(); }));
     puntos.forEach((p, i) => p.addEventListener("click", () => { ir(i); reiniciar(); }));

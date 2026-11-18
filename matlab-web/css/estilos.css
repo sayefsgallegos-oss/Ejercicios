@@ -750,3 +750,21 @@ body:not(.pa) .cuaderno .tarjeta-foto, .pa .cuaderno .tarjeta-foto { height: aut
 .verano-botones { display: flex; gap: .8rem; flex-wrap: wrap; }
 .verano-b img { width: 100%; height: auto; max-height: 420px; object-fit: contain; object-position: bottom; }
 @media (max-width: 800px) { .verano-b { grid-template-columns: 1fr; } .verano-b img { max-height: 280px; } .verano-cursos { grid-template-columns: 1fr; } }
+
+/* ---------- Celular: que no se encimen el selector, WhatsApp y el sello de Netlify ---------- */
+@media (max-width: 600px) {
+  .selector-propuesta { left: 12px; bottom: 74px; font-size: .75rem; padding: 3px; }
+  .selector-propuesta a { padding: .35rem .65rem; }
+  .whatsapp-flotante { bottom: 74px; right: 12px; padding: .75rem; }
+  .whatsapp-flotante svg { width: 26px; height: 26px; }
+  body { padding-bottom: 70px; }
+}
+@media (max-width: 600px) {
+  .barra-datos .dato { font-size: .85rem; gap: .5rem; padding: .4rem .6rem; }
+  .barra-datos svg { width: 32px; height: 32px; }
+}
+@media (max-width: 600px) and (prefers-reduced-motion: reduce) {
+  .equipo-pista { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .persona { width: auto; }
+  .persona img { width: 120px; height: 120px; }
+}
