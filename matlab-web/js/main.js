@@ -225,6 +225,16 @@
     document.body.appendChild(a);
   }
 
+  function pintarSelectorPropuestas() {
+    if (!C.mostrarSelectorPropuestas) return;
+    const enA = location.pathname.startsWith("/opcion-a");
+    const nav = document.createElement("nav");
+    nav.className = "selector-propuesta";
+    nav.setAttribute("aria-label", "Cambiar de propuesta de diseño");
+    nav.innerHTML = `<span>Propuesta:</span><a href="/opcion-a/"${enA ? ' class="activo" aria-current="page"' : ""}>A · Profesional</a><a href="/"${enA ? "" : ' class="activo" aria-current="page"'}>B · Esencia</a>`;
+    document.body.appendChild(nav);
+  }
+
   /* Enlaces con data-whatsapp="clave" o data-whatsapp-texto="..." */
   function activarEnlacesWhatsapp(raiz = document) {
     $$("[data-whatsapp], [data-whatsapp-texto]", raiz).forEach((a) => {
@@ -913,6 +923,7 @@
     await pintarReservaClase();
     activarEnlacesWhatsapp();
     pintarWhatsappFlotante();
+    pintarSelectorPropuestas();
     activarEfectos();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iniciar); else iniciar();

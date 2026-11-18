@@ -7,6 +7,12 @@
    ===================================================================== */
 window.MATLAB_CONFIG = {
 
+  /* ---------- Presentación de propuestas ----------
+     true muestra abajo a la izquierda el botón para cambiar entre la
+     Propuesta A (/opcion-a/) y la Propuesta B (resto de la web).
+     Ponlo en false cuando el cliente elija. */
+  mostrarSelectorPropuestas: true,
+
   /* ---------- Supabase (base de datos) ----------
      Cuando creemos el proyecto en Supabase, pega aquí la URL y la
      "anon public key" (Project Settings > API). Si quedan vacías, la web
