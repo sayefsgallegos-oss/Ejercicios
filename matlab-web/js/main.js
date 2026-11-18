@@ -886,6 +886,50 @@
   }
 
   /* ------------------------------------------------------------------
+     PORTADA EN CARRUSEL (Propuesta A)
+     ------------------------------------------------------------------ */
+  function activarPortadas() {
+    const car = $(".pa-carrusel");
+    if (!car) return;
+    const slides = $$(".pa-slide", car), puntos = $$(".pa-puntos button", car);
+    const ctrl = $(".pa-carrusel-ctrl", car);
+    if (slides.length < 2) { if (ctrl) ctrl.hidden = true; return; }
+    let actual = 0, timer;
+    const ir = (n) => {
+      actual = (n + slides.length) % slides.length;
+      slides.forEach((s, i) => {
+        const on = i === actual;
+        s.classList.toggle("activa", on);
+        s.setAttribute("aria-hidden", String(!on));
+        $$("a, button", s).forEach((el) => { el.tabIndex = on ? 0 : -1; });
+      });
+      puntos.forEach((p, i) => {
+        p.classList.toggle("activo", i === actual);
+        if (i === actual) p.setAttribute("aria-current", "true"); else p.removeAttribute("aria-current");
+      });
+    };
+    const reiniciar = () => {
+      clearInterval(timer);
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) timer = setInterval(() => ir(actual + 1), 7000);
+    };
+    $$(".pa-flecha", car).forEach((b) => b.addEventListener("click", () => { ir(actual + Number(b.dataset.dir)); reiniciar(); }));
+    puntos.forEach((p, i) => p.addEventListener("click", () => { ir(i); reiniciar(); }));
+    car.addEventListener("mouseenter", () => clearInterval(timer));
+    car.addEventListener("mouseleave", reiniciar);
+    car.addEventListener("focusin", () => clearInterval(timer));
+    let x0 = null;
+    car.addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+    car.addEventListener("touchend", (e) => {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 50) { ir(actual + (dx < 0 ? 1 : -1)); reiniciar(); }
+      x0 = null;
+    });
+    ir(0);
+    reiniciar();
+  }
+
+  /* ------------------------------------------------------------------
      EFECTOS: contadores y aparición al hacer scroll
      ------------------------------------------------------------------ */
   function activarEfectos() {
@@ -924,6 +968,7 @@
     activarEnlacesWhatsapp();
     pintarWhatsappFlotante();
     pintarSelectorPropuestas();
+    activarPortadas();
     activarEfectos();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iniciar); else iniciar();
