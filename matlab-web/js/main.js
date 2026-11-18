@@ -315,8 +315,10 @@
     for (const lugar of $$("[data-tarjetas]")) {
       const filtro = lugar.dataset.tarjetas; // "home" | "individual" | "grupal"
       const lista = (await programas()).filter((p) => filtro === "home" ? p.en_home : p.tipo === filtro || (filtro === "individual" && p.tipo === "sos"));
+      const conFotos = lugar.hasAttribute("data-fotos");
       lugar.innerHTML = lista.map((p) => `
-        <article class="cuaderno aparece">
+        <article class="cuaderno aparece${conFotos && p.foto_tarjeta ? " con-foto" : ""}">
+          ${conFotos && p.foto_tarjeta ? `<img class="tarjeta-foto" src="${esc(p.foto_tarjeta)}" alt="" width="720" height="480" loading="lazy">` : ""}
           ${filtro === "home" ? `<span class="etiqueta">${p.tipo === "grupal" ? "Grupal" : "Individual"}</span>` : ""}
           <h3>${esc(p.nombre)}</h3>
           <p>${esc(p.resumen)}</p>

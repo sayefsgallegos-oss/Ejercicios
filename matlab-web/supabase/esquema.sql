@@ -70,6 +70,7 @@ create table if not exists public.programas (
   resumen          text,
   descripcion      text,
   imagen           text,
+  foto_tarjeta     text,
   datos            jsonb not null default '[]',
   video_youtube    text,
   video_miniatura  text,
@@ -210,3 +211,6 @@ grant insert on public.reservas_clase to anon;
 grant select on public.disponibilidad to anon;
 revoke all on function public.horarios_ocupados(date, date) from public;
 grant execute on function public.horarios_ocupados(date, date) to anon;
+
+-- Foto para las tarjetas de programas (Propuesta A)
+alter table public.programas add column if not exists foto_tarjeta text;

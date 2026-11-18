@@ -383,3 +383,25 @@
 @media (max-width: 560px) { .pa-matti-reserva { width: 76px; } }
 @media (prefers-reduced-motion: reduce) { .pa-mascota:hover .pa-mascota-principal { transform: none; } }
 .pa-hero-foto .pa-burbuja img.pa-mini-img { width: 44px; height: auto; display: block; object-fit: contain; }
+
+/* ---------- Tarjetas de programas con foto ---------- */
+.pa .cuaderno.con-foto { padding-top: 0; overflow: hidden; }
+.pa .cuaderno .tarjeta-foto { width: calc(100% + 2.8rem); max-width: none; margin: 0 -1.4rem 1rem; aspect-ratio: 3 / 2; object-fit: cover; display: block; transition: transform .4s; }
+.pa .cuaderno.con-foto:hover .tarjeta-foto { transform: scale(1.04); }
+.pa .cuaderno.con-foto .etiqueta { top: .8rem; left: .8rem; background: rgba(255,255,255,.92); }
+.pa .cuaderno.con-foto h3 { margin-top: .3rem; }
+
+/* ---------- Banda S.O.S. ---------- */
+.pa-sos-banda { margin-top: 2rem; display: grid; grid-template-columns: 1.15fr 1fr; background: var(--azul-oscuro); color: #fff; border-radius: 20px; overflow: hidden; box-shadow: var(--sombra); }
+.pa-sos-banda > * { min-width: 0; }
+.pa-sos-banda img { width: 100%; height: 100%; object-fit: cover; display: block; min-height: 300px; }
+.pa-sos-texto { padding: clamp(1.5rem, 4vw, 2.6rem); align-self: center; }
+.pa-sos-texto .pa-eyebrow { color: #ffb4b8; }
+.pa .pa-sos-texto h3 { color: #fff; font-size: clamp(1.6rem, 3vw, 2.2rem); margin: 0 0 .6rem; letter-spacing: -.02em; }
+.pa-sos-texto > p { color: #c5d3ee; margin: 0 0 1.2rem; }
+.pa-sos-precios { display: flex; gap: .8rem; flex-wrap: wrap; }
+.pa-sos-precios span { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); border-radius: 12px; padding: .5rem .9rem; color: #c5d3ee; font-size: .9rem; }
+.pa-sos-precios b { color: #fff; font: 800 1.25rem var(--fuente-titulos); margin-right: .3rem; }
+@media (max-width: 860px) { .pa-sos-banda { grid-template-columns: 1fr; } .pa-sos-banda img { min-height: 0; aspect-ratio: 3 / 2; } }
+.pa-sos-banda.sin-foto { grid-template-columns: 1fr; }
+.pa-sos-banda.sin-foto .pa-sos-texto { max-width: 720px; }

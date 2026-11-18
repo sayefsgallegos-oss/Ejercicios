@@ -21,6 +21,7 @@ window.MATLAB_DATOS = {
   programas: [
     {
       slug: "anual-elite",
+      foto_tarjeta: "/img/opcion-a/prog-elite.webp",
       nombre: "Anual Élite",
       tipo: "individual",
       etiqueta: "Programa integral",
@@ -53,6 +54,7 @@ window.MATLAB_DATOS = {
     },
     {
       slug: "mensual-power",
+      foto_tarjeta: "/img/opcion-a/prog-power.webp",
       nombre: "Mensual Power",
       tipo: "individual",
       etiqueta: "Programa integral",
@@ -85,6 +87,7 @@ window.MATLAB_DATOS = {
     },
     {
       slug: "mateinnovando",
+      foto_tarjeta: "/img/opcion-a/prog-mateinnovando.webp",
       nombre: "Mateinnovando",
       tipo: "grupal",
       etiqueta: "Taller grupal",
@@ -115,6 +118,7 @@ window.MATLAB_DATOS = {
     },
     {
       slug: "taller-financiero",
+      foto_tarjeta: "/img/opcion-a/prog-financiero.webp",
       nombre: "Taller Financiero",
       tipo: "grupal",
       etiqueta: "Taller grupal",
