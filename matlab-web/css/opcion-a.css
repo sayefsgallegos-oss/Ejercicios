@@ -364,3 +364,22 @@
   .pa-padres::after { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(90deg, rgba(241,241,240,0) 48%, rgba(241,241,240,.88) 60%, #f1f1f0 72%); }
   .pa-padres-texto { width: min(440px, 34%); }
 }
+
+/* ---------- Matti y Numi (ilustraciones oficiales) ---------- */
+.pa-mascota { position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; }
+.pa-mascota-matti { background: linear-gradient(180deg, #e7f0ff, #f5f8ff); }
+.pa-mascota-numi { background: linear-gradient(180deg, #fff1e0, #fff8f0); }
+.pa-mascota-principal { width: min(210px, 80%); height: auto; filter: drop-shadow(0 16px 22px rgba(11,31,68,.18)); transition: transform .3s; }
+.pa-mascota:hover .pa-mascota-principal { transform: translateY(-6px) rotate(-2deg); }
+.pa-mascota-numi h3 { color: #c2410c; }
+.pa-mascota-matti h3 { color: var(--azul); }
+.pa-poses { display: flex; justify-content: center; align-items: flex-end; gap: .4rem; margin-top: 1.2rem; }
+.pa-poses img { width: 64px; height: auto; }
+.pa-mini-img { width: 44px; height: auto; flex: none; }
+.pa-numi-informe { display: block; width: 150px; height: auto; margin-top: 2rem; filter: drop-shadow(0 10px 16px rgba(11,31,68,.15)); }
+.pa-reserva .pa-ancho { position: relative; }
+.pa-matti-reserva { position: absolute; right: 0; top: -1.5rem; width: 150px; height: auto; filter: drop-shadow(0 14px 24px rgba(0,0,0,.35)); }
+@media (max-width: 960px) { .pa-numi-informe { display: none; } .pa-matti-reserva { width: 96px; top: -.5rem; } }
+@media (max-width: 560px) { .pa-matti-reserva { width: 76px; } }
+@media (prefers-reduced-motion: reduce) { .pa-mascota:hover .pa-mascota-principal { transform: none; } }
+.pa-hero-foto .pa-burbuja img.pa-mini-img { width: 44px; height: auto; display: block; object-fit: contain; }
