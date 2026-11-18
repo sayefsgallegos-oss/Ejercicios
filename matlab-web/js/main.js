@@ -226,6 +226,13 @@
     document.body.appendChild(a);
   }
 
+  function activarMenuA() {
+    const cab = $(".pa-cab"), btn = $(".pa-menu-btn");
+    if (!cab || !btn) return;
+    btn.addEventListener("click", () => { const ab = cab.classList.toggle("abierto"); btn.setAttribute("aria-expanded", String(ab)); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") { cab.classList.remove("abierto"); btn.setAttribute("aria-expanded", "false"); } });
+  }
+
   function pintarSelectorPropuestas() {
     if (!C.mostrarSelectorPropuestas) return;
     const enA = location.pathname.startsWith("/opcion-a");
@@ -975,9 +982,12 @@
     if (!lugares.length) return;
     const lista = (window.MATLAB_DATOS.testimonios || []).filter((t) => t.activo !== false).sort((a, b) => a.orden - b.orden);
     lugares.forEach((lugar) => {
+      const chat = Boolean(lugar.closest(".pa")); // Propuesta A: solo el chat recortado + frase
       lugar.innerHTML = `
         <div class="testi-pista" tabindex="0" aria-label="Testimonios de padres de familia">
-          ${lista.map((t, i) => `<button type="button" class="testi" data-i="${i}" aria-label="Ver testimonio: ${esc(t.titulo)}"><img src="${esc(t.imagen)}" alt="${esc(t.titulo)}" width="540" height="960" loading="lazy"></button>`).join("")}
+          ${lista.map((t, i) => chat && t.chat
+            ? `<button type="button" class="testi testi-chat" data-i="${i}" aria-label="Ver mensaje completo: ${esc(t.titulo)}"><span class="testi-img"><img src="${esc(t.chat)}" alt="Mensaje de WhatsApp de una familia" loading="lazy"></span><span class="testi-tit">${esc(t.titulo)}</span></button>`
+            : `<button type="button" class="testi" data-i="${i}" aria-label="Ver testimonio: ${esc(t.titulo)}"><img src="${esc(t.imagen)}" alt="${esc(t.titulo)}" width="540" height="960" loading="lazy"></button>`).join("")}
         </div>
         <div class="testi-ctrl"><button type="button" class="testi-flecha" data-dir="-1" aria-label="Anteriores">‹</button><button type="button" class="testi-flecha" data-dir="1" aria-label="Siguientes">›</button></div>`;
       const pista = $(".testi-pista", lugar);
@@ -995,7 +1005,7 @@
       const b = e.target.closest(".testi");
       if (!b) return;
       const t = lista[Number(b.dataset.i)];
-      const img = $("img", dlg); img.src = t.imagen; img.alt = t.titulo;
+      const img = $("img", dlg); img.src = (b.classList.contains("testi-chat") && t.chat) || t.imagen; img.alt = t.titulo;
       if (dlg.showModal) dlg.showModal(); else window.open(t.imagen, "_blank");
     });
   }
@@ -1039,6 +1049,7 @@
     activarEnlacesWhatsapp();
     pintarWhatsappFlotante();
     pintarSelectorPropuestas();
+    activarMenuA();
     activarPortadas();
     activarInformeDemo();
     pintarTestimonios();

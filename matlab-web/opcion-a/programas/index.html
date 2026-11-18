@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Programas | matLab</title>
+  <meta name="description" content="Programas de matemática y finanzas 100% virtuales: Mensual Power, Anual Élite, Mateinnovando, Taller Financiero, Mateverano y clases S.O.S.">
+  <!-- PROPUESTA A: diseño profesional. No indexar mientras sea propuesta. -->
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0b1f44">
+  <link rel="icon" href="/img/logo-matlab.webp" type="image/webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Fredoka:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="/css/estilos.css">
+  <link rel="stylesheet" href="/css/opcion-a.css">
+  <script src="/js/config.js" defer></script>
+  <script src="/js/datos.js" defer></script>
+  <script src="/js/main.js" defer></script>
+</head>
+<body class="pa">
+
+  <!-- ============ CABECERA (igual en todas las pestañas de la Propuesta A) ============ -->
+  <header class="pa-cab">
+    <div class="pa-ancho pa-cab-in">
+      <a class="pa-logo" href="/opcion-a/"><img src="/img/logo-matlab.webp" alt="" width="48" height="48"><span>matLab</span></a>
+      <nav class="pa-nav" id="pa-nav" aria-label="Menú principal">
+        <a href="/opcion-a/programas/" class="activo" aria-current="page">Programas</a>
+        <a href="/opcion-a/como-funciona/">Cómo funciona</a>
+        <a href="/opcion-a/mateverano/">☀️ Mateverano</a>
+        <a href="/opcion-a/equipo/">Equipo</a>
+      </nav>
+      <div class="pa-cab-acciones">
+        <a class="pa-btn pa-btn-primario" href="/opcion-a/reserva/">Reserva tu clase <span aria-hidden="true">→</span></a>
+        <button class="pa-menu-btn" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="pa-nav"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ PROGRAMAS ============ -->
+    <section class="pa-seccion pa-pag-primera" id="programas">
+      <div class="pa-ancho">
+        <p class="pa-eyebrow">Programas</p>
+        <h2 class="pa-h2">Elige el programa <span>que necesita</span></h2>
+        <div class="pa-programas" data-tarjetas="home" data-fotos></div>
+        <!-- Verano: programa "mateverano" en js/datos.js -->
+        <div class="pa-verano aparece" id="verano">
+          <div class="pa-verano-texto">
+            <p class="pa-eyebrow">☀️ Verano 2027 · Mateverano</p>
+            <h3>Talleres de verano para llegar con todo al próximo año</h3>
+            <p>Talleres grupales en vivo para primaria y secundaria, en turnos de mañana, tarde y noche.</p>
+            <ul class="pa-verano-cursos">
+              <li><strong>Razonamiento Matemático</strong>Herramientas para su pensamiento lógico.</li>
+              <li><strong>Cálculo Mental</strong>Calcula con más rapidez y seguridad.</li>
+              <li><strong>Finanzas</strong>Aprende a ahorrar y administrar su dinero.</li>
+              <li><strong>Listos para el Cole</strong>Refuerza sus bases en solo un mes.</li>
+            </ul>
+            <a class="pa-btn pa-btn-primario" href="/opcion-a/mateverano/">Asegura su cupo 2027 <span aria-hidden="true">→</span></a>
+          </div>
+          <img src="/img/programas/mateverano.webp" alt="Alumnos felices listos para los talleres de verano" width="700" height="622" loading="lazy">
+        </div>
+
+        <!-- Clases S.O.S. (foto img/opcion-a/prog-sos.webp) -->
+        <div class="pa-sos-banda aparece">
+          <img src="/img/opcion-a/prog-sos.webp" alt="Alumna repasando de noche en una clase virtual antes de su examen" width="1100" height="733" loading="lazy">
+          <div class="pa-sos-texto">
+            <p class="pa-eyebrow">Clases de emergencia S.O.S.</p>
+            <h3>¿Tiene examen mañana?</h3>
+            <p>Una clase individual en vivo para repasar justo lo que viene en su examen, con horarios de tarde, noche y fines de semana.</p>
+            <p class="pa-sos-precios"><span><b>S/ 60</b> 1 hora</span><span><b>S/ 100</b> 2 horas</span></p>
+            <a class="pa-btn pa-btn-primario" href="/clases-de-emergencia/">Reservar clase S.O.S. <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ EMPRESAS (foto img/opcion-a/empresas-taller.webp) ============ -->
+    <section class="pa-seccion" id="empresas">
+      <div class="pa-ancho pa-empresas">
+        <img class="aparece" src="/img/opcion-a/empresas-taller.webp" alt="Facilitador de matLab dictando un taller de educación financiera a un equipo de trabajo" width="1200" height="800" loading="lazy">
+        <div>
+          <p class="pa-eyebrow">matLab Empresas</p>
+          <h2 class="pa-h2">Talleres de números y educación financiera <span>para empresas</span></h2>
+          <p class="pa-intro" style="margin-inline:0">Llevamos la metodología de matLab a tu equipo de trabajo: talleres prácticos de finanzas personales y manejo de números, presenciales o virtuales.</p>
+          <div class="pa-hero-botones" style="margin-bottom:0">
+            <a class="pa-btn pa-btn-primario" data-whatsapp="empresas">Cotizar un taller <span aria-hidden="true">→</span></a>
+            <a class="pa-btn pa-btn-borde" href="mailto:marketing@matlab.com.pe">marketing@matlab.com.pe</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ PIE ============ -->
+  <footer class="pa-pie">
+    <div class="pa-ancho pa-pie-in">
+      <div class="pa-pie-marca">
+        <a class="pa-logo pa-logo-claro" href="/opcion-a/"><img src="/img/logo-matlab.webp" alt="" width="44" height="44"><span>matLab</span></a>
+        <p>Centro de enseñanza de matemática y educación financiera. Clases 100% virtuales.</p>
+      </div>
+      <div><h3>Programas</h3><a href="/programas/integrales-individuales/programa-mensual-power/">Mensual Power</a><a href="/programas/integrales-individuales/programa-anual-elite/">Anual Élite</a><a href="/clases-de-emergencia/">Clases S.O.S.</a><a href="/programas/talleres-grupales/">Talleres grupales</a></div>
+      <div><h3>matLab</h3><a href="/nosotros/">Nosotros</a><a href="/opcion-a/como-funciona/">Cómo funciona</a><a href="/opcion-a/equipo/">Equipo</a><a href="/opcion-a/mateverano/">Mateverano</a><a href="/registro-de-notas-matlab/">Portal para padres</a><a href="https://forms.gle/8j8mwW6PbADgEfH57" target="_blank" rel="noopener">Libro de reclamaciones</a></div>
+      <div><h3>Contacto</h3><a data-whatsapp="general">WhatsApp 920 000 506</a><a href="mailto:marketing@matlab.com.pe">marketing@matlab.com.pe</a><a href="https://www.instagram.com/matlab_peru/" target="_blank" rel="noopener">Instagram</a><a href="https://www.youtube.com/@matlab_peru" target="_blank" rel="noopener">YouTube</a></div>
+    </div>
+    <p class="pa-ancho pa-pie-legal">© 2026 matLab · Todos los derechos reservados</p>
+  </footer>
+</body>
+</html>

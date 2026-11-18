@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Equipo | matLab</title>
+  <meta name="description" content="Conoce al equipo detrás de matLab, a su fundador Marco Loret de Mola y a Matti y Numi.">
+  <!-- PROPUESTA A: diseño profesional. No indexar mientras sea propuesta. -->
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0b1f44">
+  <link rel="icon" href="/img/logo-matlab.webp" type="image/webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Fredoka:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="/css/estilos.css">
+  <link rel="stylesheet" href="/css/opcion-a.css">
+  <script src="/js/config.js" defer></script>
+  <script src="/js/datos.js" defer></script>
+  <script src="/js/main.js" defer></script>
+</head>
+<body class="pa">
+
+  <!-- ============ CABECERA (igual en todas las pestañas de la Propuesta A) ============ -->
+  <header class="pa-cab">
+    <div class="pa-ancho pa-cab-in">
+      <a class="pa-logo" href="/opcion-a/"><img src="/img/logo-matlab.webp" alt="" width="48" height="48"><span>matLab</span></a>
+      <nav class="pa-nav" id="pa-nav" aria-label="Menú principal">
+        <a href="/opcion-a/programas/">Programas</a>
+        <a href="/opcion-a/como-funciona/">Cómo funciona</a>
+        <a href="/opcion-a/mateverano/">☀️ Mateverano</a>
+        <a href="/opcion-a/equipo/" class="activo" aria-current="page">Equipo</a>
+      </nav>
+      <div class="pa-cab-acciones">
+        <a class="pa-btn pa-btn-primario" href="/opcion-a/reserva/">Reserva tu clase <span aria-hidden="true">→</span></a>
+        <button class="pa-menu-btn" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="pa-nav"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ EQUIPO (lista editable en js/datos.js o Supabase, tabla "equipo") ============ -->
+    <section class="pa-seccion pa-fondo-suave pa-pag-primera" id="equipo-real">
+      <div class="pa-ancho">
+        <p class="pa-eyebrow">Nuestro equipo</p>
+        <h2 class="pa-h2">Conoce al equipo <span>detrás de matLab</span></h2>
+        <p class="pa-intro">Las personas que hacen posible que más de 12 000 alumnos aprendan con nosotros desde hace 14 años.</p>
+
+        <div class="pa-lideres">
+          <article class="pa-lider aparece">
+            <img src="/img/equipo/marco-loret-de-mola.webp" alt="Marco Loret de Mola" width="336" height="344" loading="lazy">
+            <div>
+              <h3>Marco Loret de Mola</h3>
+              <p class="pa-lider-cargo">Director General</p>
+              <p>Fundador de matLab. Dirige la empresa junto a Nidia Arana.</p>
+            </div>
+          </article>
+          <article class="pa-lider aparece">
+            <img src="/img/equipo/nidia-arana.webp" alt="Nidia Arana" width="336" height="344" loading="lazy">
+            <div>
+              <h3>Nidia Arana</h3>
+              <p class="pa-lider-cargo">Gerente</p>
+              <p>Dirige matLab junto a Marco Loret de Mola.</p>
+            </div>
+          </article>
+        </div>
+
+        <!-- Marco en YouTube (proyecto personal del director) -->
+        <div class="pa-yt2 aparece">
+          <div class="pa-yt2-cab">
+            <img class="pa-yt2-foto" src="/img/equipo/marco-director.webp" alt="Marco Loret de Mola, fundador y director general de matLab" width="700" height="761" loading="lazy">
+            <div>
+              <p class="pa-eyebrow">Quizás lo conozcas</p>
+              <h3>Marco Loret de Mola</h3>
+              <p>Nuestro fundador explica en YouTube todo lo que se entiende mejor con números.</p>
+              <a class="pa-btn pa-btn-yt" href="https://www.youtube.com/@marcoloretdemola" target="_blank" rel="noopener">▶ Ver su canal de YouTube</a>
+            </div>
+          </div>
+          <div class="pa-yt2-videos">
+            <div data-video="JQA3hZPN9T4" data-miniatura="/img/videos/testimonio-1.webp" data-titulo="Video de Marco Loret de Mola: miedo de pedir préstamo hipotecario"></div>
+            <div data-video="RgZsUta_LA4" data-miniatura="/img/videos/testimonio-2.webp" data-titulo="Video de Marco Loret de Mola: nuestra oportunidad es ahora"></div>
+            <div data-video="AjX5ylXbaPU" data-miniatura="/img/videos/testimonio-3.webp" data-titulo="Video de Marco Loret de Mola: aprende a controlar tu dinero"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pa-ancho"><h3 class="pa-equipo-sub">Equipo matLab</h3></div>
+      <div class="equipo" id="equipo" data-excluir="direccion" aria-label="Equipo de matLab"></div>
+    </section>
+
+    <!-- ============ MATTI Y NUMI ============ -->
+    <section class="pa-seccion" id="matti-numi">
+      <div class="pa-ancho pa-mascotas-grid">
+        <div>
+          <p class="pa-eyebrow">Nuestros personajes</p>
+          <h2 class="pa-h2">Conoce a <span>Matti y Numi</span></h2>
+          <p class="pa-intro" style="margin-inline:0">Matti y Numi acompañan a los alumnos en sus clases y materiales, y hacen que practicar matemática y finanzas sea más cercano.</p>
+        </div>
+        <div class="pa-mascotas">
+          <article class="pa-mascota pa-mascota-matti aparece">
+            <img class="pa-mascota-principal" src="/img/mascotas/matti02.webp" alt="Matti, el robot azul de matLab, saludando" width="353" height="348" loading="lazy">
+            <h3>Matti</h3>
+            <p>Acompaña a los alumnos en matemática: los anima en cada clase y celebra cada logro.</p>
+            <div class="pa-poses" aria-hidden="true">
+              <img src="/img/mascotas/matti06.webp" alt="" width="220" height="192" loading="lazy">
+              <img src="/img/mascotas/matti01.webp" alt="" width="220" height="196" loading="lazy">
+              <img src="/img/mascotas/matti-cel.webp" alt="" width="260" height="303" loading="lazy">
+            </div>
+          </article>
+          <article class="pa-mascota pa-mascota-numi aparece">
+            <img class="pa-mascota-principal" src="/img/mascotas/numi13.webp" alt="Numi, el robot naranja de matLab, con monedas" width="379" height="372" loading="lazy">
+            <h3>Numi</h3>
+            <p>Acompaña a los alumnos en finanzas: ahorro, presupuesto y decisiones con números de la vida real.</p>
+            <div class="pa-poses" aria-hidden="true">
+              <img src="/img/mascotas/numi-calc.webp" alt="" width="220" height="270" loading="lazy">
+              <img src="/img/mascotas/numi-grafico.webp" alt="" width="260" height="244" loading="lazy">
+              <img src="/img/mascotas/numi-idea.webp" alt="" width="220" height="218" loading="lazy">
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ PIE ============ -->
+  <footer class="pa-pie">
+    <div class="pa-ancho pa-pie-in">
+      <div class="pa-pie-marca">
+        <a class="pa-logo pa-logo-claro" href="/opcion-a/"><img src="/img/logo-matlab.webp" alt="" width="44" height="44"><span>matLab</span></a>
+        <p>Centro de enseñanza de matemática y educación financiera. Clases 100% virtuales.</p>
+      </div>
+      <div><h3>Programas</h3><a href="/programas/integrales-individuales/programa-mensual-power/">Mensual Power</a><a href="/programas/integrales-individuales/programa-anual-elite/">Anual Élite</a><a href="/clases-de-emergencia/">Clases S.O.S.</a><a href="/programas/talleres-grupales/">Talleres grupales</a></div>
+      <div><h3>matLab</h3><a href="/nosotros/">Nosotros</a><a href="/opcion-a/como-funciona/">Cómo funciona</a><a href="/opcion-a/equipo/">Equipo</a><a href="/opcion-a/mateverano/">Mateverano</a><a href="/registro-de-notas-matlab/">Portal para padres</a><a href="https://forms.gle/8j8mwW6PbADgEfH57" target="_blank" rel="noopener">Libro de reclamaciones</a></div>
+      <div><h3>Contacto</h3><a data-whatsapp="general">WhatsApp 920 000 506</a><a href="mailto:marketing@matlab.com.pe">marketing@matlab.com.pe</a><a href="https://www.instagram.com/matlab_peru/" target="_blank" rel="noopener">Instagram</a><a href="https://www.youtube.com/@matlab_peru" target="_blank" rel="noopener">YouTube</a></div>
+    </div>
+    <p class="pa-ancho pa-pie-legal">© 2026 matLab · Todos los derechos reservados</p>
+  </footer>
+</body>
+</html>
