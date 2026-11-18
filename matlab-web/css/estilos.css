@@ -630,3 +630,30 @@ h1, h2, h3, .titulo, .boton, .menu a, .menu button.menu-desplegar, .cifra .numer
 .selector-propuesta a { color: #fff; text-decoration: none; padding: .45rem .9rem; border-radius: 999px; }
 .selector-propuesta a.activo { background: #fff; color: #0b1f44; }
 @media (max-width: 600px) { .selector-propuesta span { display: none; } .selector-propuesta a { padding: .4rem .7rem; } }
+
+/* =====================================================================
+   PROPUESTA B MÁS PROFESIONAL (mismo espíritu, acabado más limpio)
+   Solo aplica a las páginas de la Propuesta B (body sin la clase .pa)
+   ===================================================================== */
+body:not(.pa) { --sombra-titulo: none; }
+body:not(.pa) .cabecera.cuadricula { background-image: none; background-color: var(--azul); border-bottom: 1px solid rgba(255,255,255,.18); }
+body:not(.pa) .barra-superior { background: var(--azul-oscuro); }
+body:not(.pa) .barra-superior a { color: #dbe8f7; font-size: .88rem; }
+@media (min-width: 961px) {
+  body:not(.pa) .menu > li > a:not(.boton), body:not(.pa) .menu > li > button.menu-desplegar { color: #fff; font-weight: 500; }
+  body:not(.pa) .menu > li > a:not(.boton):hover, body:not(.pa) .menu > li > button.menu-desplegar:hover { color: var(--amarillo); }
+}
+body:not(.pa) .titulo { letter-spacing: -.02em; }
+body:not(.pa) .frase { text-shadow: none; font-weight: 500; }
+body:not(.pa) .cuaderno { border-width: 2px; border-color: var(--azul-oscuro); box-shadow: 6px 8px 0 -2px #fff, 6px 8px 0 0 var(--azul-oscuro); }
+body:not(.pa) .cuaderno h3 { color: var(--azul-oscuro); text-shadow: none; font-size: clamp(1.6rem, 2.8vw, 2.1rem); background: linear-gradient(transparent 62%, rgba(255,194,14,.55) 62%); padding: 0 .2em; display: inline; }
+body:not(.pa) .cuaderno h3 + p { margin-top: 1rem; }
+body:not(.pa) .cuaderno .etiqueta { background: var(--azul-oscuro); }
+body:not(.pa) .barra-programas h3, body:not(.pa) .especificaciones h3, body:not(.pa) .mision-vision h3 { color: var(--azul-oscuro); text-shadow: none; }
+body:not(.pa) .caja-form { border-radius: 16px; }
+body:not(.pa) .checks li::before { width: 46px; height: 24px; background-size: 15px; }
+body:not(.pa) .cifra .pastilla { background: var(--azul-oscuro); }
+body:not(.pa) .video { border-width: 8px; }
+body:not(.pa) .persona h3 { text-shadow: none; }
+body:not(.pa) .aviso { background: var(--azul-oscuro); }
+body:not(.pa) .aviso .boton { background: var(--rojo); color: #fff; }
