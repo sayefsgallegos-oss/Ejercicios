@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reserva tu clase | matLab</title>
+  <meta name="description" content="Elige el grado, la condición del alumno y un horario libre para reservar tu clase de matemáticas 100% virtual en matLab.">
+  <link rel="canonical" href="https://matlab.com.pe/reserva-tu-clase/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="matLab">
+  <meta property="og:title" content="Reserva tu clase | matLab">
+  <meta property="og:description" content="Elige el grado, la condición del alumno y un horario libre para reservar tu clase de matemáticas 100% virtual en matLab.">
+  <meta property="og:image" content="https://matlab.com.pe/img/banners/power.webp">
+  <meta property="og:url" content="https://matlab.com.pe/reserva-tu-clase/">
+  <meta name="theme-color" content="#0ea5ec">
+  <link rel="icon" href="/img/logo-matlab.webp" type="image/webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap">
+  <link rel="stylesheet" href="/css/estilos.css">
+  <script src="/js/config.js" defer></script>
+  <script src="/js/datos.js" defer></script>
+  <script src="/js/main.js" defer></script>
+</head>
+<body>
+  <!-- Cabecera y menú: se generan solos (js/main.js) -->
+  <div id="cabecera"></div>
+
+  <main>
+    <section class="seccion cuadricula">
+      <div class="contenedor">
+        <h1 class="titulo">Reserva tu <span class="amarillo">clase</span></h1>
+        <p class="frase">Elige el grado, cuéntanos cómo está tu hijo y escoge un horario libre. Clases de 50 minutos, 100% virtuales.</p>
+        <!-- El calendario se genera solo. Los horarios se editan en js/config.js (reservas) o en Supabase (tabla "disponibilidad") -->
+        <div id="reserva-clase"></div>
+        <noscript><p style="text-align:center;color:#fff">Activa JavaScript para reservar o escríbenos al WhatsApp 920 000 506.</p></noscript>
+      </div>
+    </section>
+  </main>
+
+  <!-- Pie de página: se genera solo (js/main.js) -->
+  <div id="pie"></div>
+</body>
+</html>

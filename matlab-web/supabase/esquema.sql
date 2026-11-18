@@ -126,3 +126,87 @@ create policy "web lee equipo" on public.equipo for select to anon using (activo
 revoke all on public.leads, public.reservas_sos from anon;
 grant insert on public.leads, public.reservas_sos to anon;
 grant select on public.banners, public.programas, public.equipo to anon;
+
+-- =====================================================================
+-- RESERVA TU CLASE
+-- =====================================================================
+
+-- Horarios en que hay profesores (día 0 = lunes ... 6 = domingo; hora de inicio 0-23)
+create table if not exists public.disponibilidad (
+  id          bigint generated always as identity primary key,
+  nivel       text not null check (nivel in ('primaria','secundaria')),
+  dia_semana  int  not null check (dia_semana between 0 and 6),
+  hora        int  not null check (hora between 0 and 23),
+  cupos       int  not null default 1 check (cupos >= 0),
+  activo      boolean not null default true,
+  unique (nivel, dia_semana, hora)
+);
+
+create table if not exists public.reservas_clase (
+  id            bigint generated always as identity primary key,
+  creado        timestamptz not null default now(),
+  fecha         date not null,
+  hora          int  not null check (hora between 0 and 23),
+  nivel         text not null check (nivel in ('primaria','secundaria')),
+  grado         text not null check (char_length(grado) <= 60),
+  condicion     text not null check (char_length(condicion) <= 60),
+  programa      text check (char_length(programa) <= 80),
+  apoderado     text not null check (char_length(apoderado) between 2 and 120),
+  alumno        text not null check (char_length(alumno) between 2 and 120),
+  celular       text not null check (char_length(celular) between 6 and 20),
+  pagina        text check (char_length(pagina) <= 200),
+  utm_source    text check (char_length(utm_source) <= 120),
+  utm_medium    text check (char_length(utm_medium) <= 120),
+  utm_campaign  text check (char_length(utm_campaign) <= 160),
+  -- seguimiento interno
+  estado        text not null default 'reservada' check (estado in ('reservada','confirmada','dictada','cancelada','no asistió')),
+  profesor      text,
+  notas         text
+);
+
+-- Antes de guardar: el horario debe existir, estar en el futuro y tener cupo.
+create or replace function public.validar_reserva_clase() returns trigger
+language plpgsql security definer set search_path = public as $$
+declare v_cupos int; v_usados int;
+begin
+  select cupos into v_cupos from disponibilidad
+   where nivel = new.nivel and dia_semana = extract(isodow from new.fecha)::int - 1 and hora = new.hora and activo;
+  if v_cupos is null then raise exception 'horario_no_disponible'; end if;
+  if (new.fecha + make_time(new.hora, 0, 0)) < (now() at time zone 'America/Lima') then raise exception 'horario_pasado'; end if;
+  -- evita que dos personas tomen el último cupo al mismo tiempo
+  perform pg_advisory_xact_lock(hashtext(new.nivel || new.fecha::text || new.hora::text));
+  select count(*) into v_usados from reservas_clase
+   where nivel = new.nivel and fecha = new.fecha and hora = new.hora and estado <> 'cancelada';
+  if v_usados >= v_cupos then raise exception 'horario_lleno'; end if;
+  return new;
+end $$;
+
+drop trigger if exists antes_de_reservar on public.reservas_clase;
+create trigger antes_de_reservar before insert on public.reservas_clase
+  for each row execute function public.validar_reserva_clase();
+
+-- La web solo puede saber CUÁNTAS reservas hay por horario (nunca nombres ni celulares).
+create or replace function public.horarios_ocupados(desde date, hasta date)
+returns table (fecha date, hora int, nivel text, total int)
+language sql stable security definer set search_path = public as $$
+  select r.fecha, r.hora, r.nivel, count(*)::int
+    from reservas_clase r
+   where r.fecha between desde and least(hasta, desde + 31) and r.estado <> 'cancelada'
+   group by r.fecha, r.hora, r.nivel;
+$$;
+
+alter table public.disponibilidad enable row level security;
+alter table public.reservas_clase enable row level security;
+
+drop policy if exists "web lee disponibilidad" on public.disponibilidad;
+create policy "web lee disponibilidad" on public.disponibilidad for select to anon using (activo);
+
+drop policy if exists "web crea reservas de clase" on public.reservas_clase;
+create policy "web crea reservas de clase" on public.reservas_clase
+  for insert to anon with check (estado = 'reservada' and profesor is null and notas is null);
+
+revoke all on public.reservas_clase from anon;
+grant insert on public.reservas_clase to anon;
+grant select on public.disponibilidad to anon;
+revoke all on function public.horarios_ocupados(date, date) from public;
+grant execute on function public.horarios_ocupados(date, date) to anon;

@@ -145,6 +145,7 @@
                 </ul>
               </li>
               <li><a href="/nosotros/"${activo(ruta.startsWith("/nosotros"))}>Nosotros</a></li>
+              <li><a class="boton boton-rojo boton-reservar${ruta.startsWith("/reserva-tu-clase") ? " activo" : ""}" href="/reserva-tu-clase/">📅 Reserva tu clase</a></li>
               <li><a class="boton boton-verde" href="/contactanos/">Contáctanos</a></li>
             </ul>
           </nav>
@@ -192,6 +193,7 @@
               <li><a href="/programas/talleres-grupales/">Talleres grupales</a></li>
               <li><a href="/clases-de-emergencia/">Clases S.O.S.</a></li>
               <li><a href="/nosotros/">Nosotros</a></li>
+              <li><a href="/reserva-tu-clase/">Reserva tu clase</a></li>
               <li><a class="boton boton-verde" href="/contactanos/">Contáctanos</a></li>
             </ul>
           </div>
@@ -487,7 +489,7 @@
             <span class="etiqueta">${esc(p.etiqueta)}</span>
             <h1>${esc(p.nombre)}</h1>
             <p>${esc(p.descripcion)}</p>
-            <a class="boton boton-rojo" href="#reservar">¡Reserva tu clase!</a>
+            <a class="boton boton-rojo" href="/reserva-tu-clase/?programa=${encodeURIComponent(p.slug)}">📅 ¡Reserva tu clase!</a>
           </div>
           <div class="imagen"><img src="${esc(p.imagen)}" alt="Alumno de ${esc(p.nombre)}" width="700" height="964" fetchpriority="high"></div>
         </div>
@@ -630,6 +632,249 @@
   }
 
   /* ------------------------------------------------------------------
+     RESERVA TU CLASE — grado + condición -> calendario -> confirmar
+     ------------------------------------------------------------------ */
+  async function pintarReservaClase() {
+    const lugar = $("#reserva-clase");
+    if (!lugar) return;
+    const R = C.reservas;
+    const DIAS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+    const DIAS_C = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
+    const pad = (n) => String(n).padStart(2, "0");
+    const iso = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    const corta = (d) => `${pad(d.getDate())}-${pad(d.getMonth() + 1)}-${d.getFullYear()}`;
+    // "Ahora" en hora de Lima, aunque el papá esté en otro país.
+    const ahora = () => new Date(new Date().toLocaleString("en-US", { timeZone: R.zonaHoraria }));
+    const lunes = () => { const d = ahora(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return d; };
+    const diaDe = (sem, i) => { const d = lunes(); d.setDate(d.getDate() + sem * 7 + i); return d; };
+
+    const progs = await programas();
+    const progParam = new URLSearchParams(location.search).get("programa");
+    const programa = progs.find((p) => p.slug === progParam) || null;
+    const st = { grado: "", nivel: "", condicion: "", semana: 0, elegido: null, diaMovil: null, ocupados: {}, dispo: null };
+
+    /* Disponibilidad: Supabase (tabla "disponibilidad") o config.js */
+    async function cargarDisponibilidad() {
+      if (st.dispo) return;
+      st.dispo = R.disponibilidad;
+      st.cupos = { ...R.cupos };
+      if (!supabaseActivo) return;
+      try {
+        const r = await fetch(`${C.supabaseUrl}/rest/v1/disponibilidad?select=nivel,dia_semana,hora,cupos&activo=eq.true`, { headers: { apikey: C.supabaseAnonKey, Authorization: `Bearer ${C.supabaseAnonKey}` } });
+        if (!r.ok) throw new Error(r.status);
+        const filas = await r.json();
+        if (!filas.length) return;
+        const d = { primaria: {}, secundaria: {} }; const cupos = {};
+        filas.forEach((f) => { (d[f.nivel][f.dia_semana] ||= []).push(f.hora); cupos[`${f.nivel}|${f.dia_semana}|${f.hora}`] = f.cupos; });
+        Object.values(d).forEach((n) => Object.values(n).forEach((l) => l.sort((a, b) => a - b)));
+        st.dispo = d; st.cuposDetalle = cupos;
+      } catch (e) { console.warn("No se pudo leer la disponibilidad de Supabase, uso config.js", e); }
+    }
+    async function cargarOcupados() {
+      st.ocupados = {};
+      if (!supabaseActivo) return;
+      try {
+        const r = await fetch(`${C.supabaseUrl}/rest/v1/rpc/horarios_ocupados`, {
+          method: "POST", headers: { apikey: C.supabaseAnonKey, Authorization: `Bearer ${C.supabaseAnonKey}`, "Content-Type": "application/json" },
+          body: JSON.stringify({ desde: iso(diaDe(st.semana, 0)), hasta: iso(diaDe(st.semana, 6)) }),
+        });
+        if (!r.ok) throw new Error(r.status);
+        (await r.json()).forEach((f) => { st.ocupados[`${f.nivel}|${f.fecha}|${f.hora}`] = f.total; });
+      } catch (e) { console.warn("No se pudieron leer los horarios ocupados", e); }
+    }
+    const cuposDe = (i, hora) => st.cuposDetalle?.[`${st.nivel}|${i}|${hora}`] ?? st.cupos[st.nivel] ?? 1;
+
+    function horariosDelDia(i) {
+      const fecha = diaDe(st.semana, i);
+      const limite = ahora(); limite.setHours(limite.getHours() + R.anticipacionHoras);
+      return (st.dispo[st.nivel][i] || []).map((hora) => {
+        const inicio = new Date(fecha); inicio.setHours(hora, 0, 0, 0);
+        const usados = st.ocupados[`${st.nivel}|${iso(fecha)}|${hora}`] || 0;
+        const estado = inicio < limite ? "pasado" : usados >= cuposDe(i, hora) ? "ocupado" : "libre";
+        return { fecha, hora, estado, id: `${iso(fecha)}|${hora}` };
+      }).filter((s) => s.estado !== "pasado");
+    }
+
+    const condiciones = R.condiciones.map((c, i) => `
+      <label class="chip-opcion" for="rc-cond-${i}"><input type="radio" name="condicion" id="rc-cond-${i}" value="${esc(c.valor)}"${i ? "" : " checked"}>
+        <span><strong>${esc(c.valor)}</strong><small>${esc(c.detalle)}</small></span></label>`).join("");
+
+    lugar.innerHTML = `
+      <ol class="rc-pasos" aria-label="Pasos de la reserva">
+        <li data-p="1" class="activo"><span>1</span>Alumno</li><li data-p="2"><span>2</span>Horario</li><li data-p="3"><span>3</span>Confirmar</li>
+      </ol>
+
+      <section class="rc-tarjeta" id="rc-paso1">
+        <h2>Sobre el alumno</h2>
+        <p class="rc-ayuda">${programa ? `Reserva para <strong>${esc(programa.nombre)}</strong>. ` : ""}Con esto te mostramos solo los horarios de los profesores de su nivel.</p>
+        <div class="rc-preguntas">
+          ${campo(`<label class="rc-etq" for="rc-grado">Grado del alumno</label><select id="rc-grado" required>${opciones(C.grados, "Elige el grado")}</select>`, "Elige el grado para ver los horarios")}
+          <fieldset class="rc-fieldset"><legend class="rc-etq">Condición del alumno</legend><div class="chips-opcion">${condiciones}</div></fieldset>
+        </div>
+        <div class="rc-acciones"><span></span><button class="boton boton-rojo" type="button" id="rc-ir2">Ver horarios disponibles →</button></div>
+      </section>
+
+      <section class="rc-tarjeta" id="rc-paso2" hidden>
+        <div class="rc-cal-top">
+          <div><h2>Elige un horario</h2><div class="rc-filtro">Horarios para <span class="rc-etiqueta" id="rc-et-grado"></span><span class="rc-etiqueta" id="rc-et-cond"></span> · Hora de Lima (Perú)</div></div>
+          <div class="rc-semana">
+            <button class="rc-icono" type="button" id="rc-ant" aria-label="Semana anterior">‹</button>
+            <strong id="rc-rango"></strong>
+            <button class="rc-icono" type="button" id="rc-sig" aria-label="Semana siguiente">›</button>
+            <button class="rc-link" type="button" id="rc-hoy">Semana actual</button>
+          </div>
+        </div>
+        <div class="rc-cal-scroll"><div class="rc-cal" id="rc-cal"></div></div>
+        <div class="rc-movil"><div class="rc-tabs" id="rc-tabs"></div><div class="rc-lista" id="rc-lista"></div></div>
+        <div class="rc-leyenda"><span><i class="rc-libre-i"></i>Disponible</span><span><i class="rc-ocupado-i"></i>Ocupado</span><span><i class="rc-elegido-i"></i>Tu elección</span></div>
+        <div class="rc-seleccion" id="rc-seleccion" hidden><p id="rc-sel-texto"></p><button class="boton boton-rojo" type="button" id="rc-ir3">Continuar →</button></div>
+        <div class="rc-acciones"><button class="boton boton-blanco" type="button" id="rc-volver1">← Cambiar grado</button></div>
+      </section>
+
+      <section class="rc-tarjeta" id="rc-paso3" hidden>
+        <div id="rc-p3">
+          <h2>Confirma tu reserva</h2>
+          <p class="rc-ayuda">Último paso: déjanos tus datos para confirmar la clase.</p>
+          <div class="rc-confirmar">
+            <div class="rc-resumen"><dl id="rc-resumen"></dl></div>
+            <form class="formulario" id="rc-form" novalidate>
+              ${campo('<label class="rc-etq" for="rc-apoderado">Nombre del padre, madre o apoderado</label><input id="rc-apoderado" name="apoderado" autocomplete="name" required minlength="2">')}
+              ${campo('<label class="rc-etq" for="rc-alumno">Nombre del alumno</label><input id="rc-alumno" name="alumno" required minlength="2">')}
+              ${campo('<label class="rc-etq" for="rc-celular">Celular (WhatsApp)</label><input id="rc-celular" name="celular" type="tel" inputmode="tel" autocomplete="tel" required pattern="[0-9+ ]{9,15}">', "Ingresa un celular válido (9 dígitos)")}
+              <input class="trampa" name="sitio_web" tabindex="-1" autocomplete="off" aria-hidden="true">
+              <label class="check"><input type="checkbox" name="acepta" required> <span>Acepto el uso de mis datos para que matLab me contacte.</span></label>
+              <div class="rc-acciones"><button class="boton boton-blanco" type="button" id="rc-volver2">← Otro horario</button><button class="boton boton-rojo" type="submit">Confirmar reserva</button></div>
+              <div class="form-estado oculto" role="status" aria-live="polite"></div>
+            </form>
+          </div>
+        </div>
+        <div class="rc-listo" id="rc-listo" hidden></div>
+      </section>`;
+
+    const irPaso = (n) => {
+      [1, 2, 3].forEach((p) => { $("#rc-paso" + p).hidden = p !== n; });
+      $$(".rc-pasos li", lugar).forEach((li) => { const p = Number(li.dataset.p); li.classList.toggle("activo", p === n); li.classList.toggle("hecho", p < n); });
+      $("#rc-paso" + n).scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+    };
+    const textoClase = () => { const d = st.elegido.fecha; return `${DIAS[(d.getDay() + 6) % 7]} ${d.getDate()}/${pad(d.getMonth() + 1)}/${d.getFullYear()}, ${pad(st.elegido.hora)}:00 - ${pad(st.elegido.hora + 1)}:00`; };
+
+    function bloque(s) {
+      const rango = `${pad(s.hora)}:00 - ${pad(s.hora + 1)}:00`;
+      const fila = s.hora - R.horaInicio + 1;
+      if (s.estado === "ocupado") return `<div class="rc-bloque rc-ocupado" style="grid-row:${fila}"><b>${rango}</b>Ocupado</div>`;
+      const el = st.elegido?.id === s.id;
+      return `<button type="button" class="rc-bloque rc-libre${el ? " rc-elegido" : ""}" data-id="${s.id}" style="grid-row:${fila}" aria-pressed="${el}"
+        aria-label="${DIAS[(s.fecha.getDay() + 6) % 7]} ${s.fecha.getDate()}, ${rango}, disponible"><b>${rango}</b>${el ? "Tu elección" : "Disponible"}</button>`;
+    }
+
+    async function pintarSemana() {
+      $("#rc-cal").innerHTML = '<p class="rc-cargando">Cargando horarios…</p>';
+      await cargarOcupados();
+      const n = R.horaFin - R.horaInicio, hoy = ahora();
+      $("#rc-rango").textContent = `${corta(diaDe(st.semana, 0))} – ${corta(diaDe(st.semana, 6))}`;
+      $("#rc-ant").disabled = st.semana <= 0; $("#rc-sig").disabled = st.semana >= R.semanasAdelante; $("#rc-hoy").hidden = st.semana === 0;
+
+      let html = '<div class="rc-cab"></div>';
+      for (let i = 0; i < 7; i++) { const d = diaDe(st.semana, i); html += `<div class="rc-cab${iso(d) === iso(hoy) ? " rc-hoy" : ""}">${DIAS_C[i]}<b>${pad(d.getDate())}/${pad(d.getMonth() + 1)}</b></div>`; }
+      html += `<div class="rc-horas" style="--n:${n}">${Array.from({ length: n }, (_, k) => `<div>${pad(R.horaInicio + k)}:00</div>`).join("")}</div>`;
+      for (let i = 0; i < 7; i++) {
+        const d = diaDe(st.semana, i);
+        let linea = "";
+        if (iso(d) === iso(hoy)) { const m = (hoy.getHours() - R.horaInicio) * 60 + hoy.getMinutes(); if (m > 0 && m < n * 60) linea = `<div class="rc-ahora" style="top:calc(${m / 60} * var(--rc-hora))"></div>`; }
+        html += `<div class="rc-dia${(st.dispo[st.nivel][i] || []).length ? "" : " rc-cerrado"}" style="--n:${n}">${linea}${horariosDelDia(i).map(bloque).join("")}</div>`;
+      }
+      $("#rc-cal").innerHTML = html;
+
+      const dias = Array.from({ length: 7 }, (_, i) => ({ i, d: diaDe(st.semana, i), libres: horariosDelDia(i).filter((s) => s.estado === "libre").length }));
+      if (st.diaMovil === null || !dias[st.diaMovil].libres) st.diaMovil = (dias.find((x) => x.libres) || dias[0]).i;
+      $("#rc-tabs").innerHTML = dias.map((x) => `<button type="button" data-dia="${x.i}" class="${x.i === st.diaMovil ? "activo" : ""}" aria-pressed="${x.i === st.diaMovil}"><small>${DIAS_C[x.i]}</small><b>${pad(x.d.getDate())}</b><em>${x.libres ? x.libres + " libres" : "—"}</em></button>`).join("");
+      const slots = horariosDelDia(st.diaMovil);
+      $("#rc-lista").innerHTML = slots.length ? slots.map(bloque).join("") : '<p class="rc-vacio">No hay clases este día. Prueba con otro.</p>';
+
+      const sel = $("#rc-seleccion");
+      if (st.elegido) { const d = st.elegido.fecha; $("#rc-sel-texto").innerHTML = `Elegiste <strong>${DIAS[(d.getDay() + 6) % 7]} ${d.getDate()}/${pad(d.getMonth() + 1)}, de ${pad(st.elegido.hora)}:00 a ${pad(st.elegido.hora + 1)}:00</strong>.`; sel.hidden = false; }
+      else sel.hidden = true;
+    }
+
+    $("#rc-grado").addEventListener("change", () => $("#rc-grado").closest(".campo").classList.remove("error"));
+    $("#rc-ir2").addEventListener("click", async () => {
+      st.grado = $("#rc-grado").value;
+      if (!st.grado) { $("#rc-grado").closest(".campo").classList.add("error"); $("#rc-grado").focus(); return; }
+      st.nivel = /Primaria/i.test(st.grado) ? "primaria" : "secundaria";
+      st.condicion = $('input[name="condicion"]:checked', lugar).value;
+      st.semana = 0; st.elegido = null; st.diaMovil = null;
+      $("#rc-et-grado").textContent = st.grado; $("#rc-et-cond").textContent = st.condicion;
+      await cargarDisponibilidad();
+      irPaso(2); pintarSemana();
+    });
+    $("#rc-volver1").addEventListener("click", () => irPaso(1));
+    $("#rc-volver2").addEventListener("click", () => irPaso(2));
+    $("#rc-ant").addEventListener("click", () => { st.semana--; st.diaMovil = null; pintarSemana(); });
+    $("#rc-sig").addEventListener("click", () => { st.semana++; st.diaMovil = null; pintarSemana(); });
+    $("#rc-hoy").addEventListener("click", () => { st.semana = 0; st.diaMovil = null; pintarSemana(); });
+    lugar.addEventListener("click", (e) => {
+      const b = e.target.closest(".rc-libre");
+      if (b) { const [f, h] = b.dataset.id.split("|"); const [y, m, d] = f.split("-").map(Number); st.elegido = { id: b.dataset.id, fecha: new Date(y, m - 1, d), hora: Number(h) }; pintarSemana(); return; }
+      const t = e.target.closest("[data-dia]");
+      if (t) { st.diaMovil = Number(t.dataset.dia); pintarSemana(); }
+    });
+    $("#rc-ir3").addEventListener("click", () => {
+      $("#rc-resumen").innerHTML = `${programa ? `<dt>Programa</dt><dd>${esc(programa.nombre)}</dd>` : ""}<dt>Grado</dt><dd>${esc(st.grado)}</dd><dt>Condición</dt><dd>${esc(st.condicion)}</dd><dt>Clase</dt><dd>${textoClase()}</dd><dt>Duración</dt><dd>50 minutos, virtual</dd>`;
+      $("#rc-p3").hidden = false; $("#rc-listo").hidden = true;
+      irPaso(3);
+    });
+
+    const form = $("#rc-form");
+    $$("input", form).forEach((el) => el.addEventListener("input", () => el.closest(".campo")?.classList.remove("error")));
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if ($(".trampa", form).value || !validar(form)) return;
+      const fd = new FormData(form);
+      const reserva = {
+        fecha: st.elegido.id.split("|")[0], hora: st.elegido.hora, nivel: st.nivel, grado: st.grado, condicion: st.condicion,
+        programa: programa?.nombre || null, apoderado: fd.get("apoderado").trim(), alumno: fd.get("alumno").trim(), celular: fd.get("celular").trim(),
+        pagina: location.pathname, utm_source: UTM.utm_source || null, utm_medium: UTM.utm_medium || null, utm_campaign: UTM.utm_campaign || null,
+      };
+      const boton = $('button[type="submit"]', form), estado = $(".form-estado", form);
+      boton.disabled = true; boton.textContent = "Reservando…";
+      let ok = false, lleno = false;
+      if (supabaseActivo) {
+        try {
+          const r = await fetch(`${C.supabaseUrl}/rest/v1/reservas_clase`, { method: "POST", headers: { apikey: C.supabaseAnonKey, Authorization: `Bearer ${C.supabaseAnonKey}`, "Content-Type": "application/json", Prefer: "return=minimal" }, body: JSON.stringify(reserva) });
+          if (r.ok) ok = true; else { const t = await r.text(); lleno = /horario_lleno|horario_pasado|horario_no_disponible/.test(t); console.warn("Supabase", r.status, t); }
+        } catch (err) { console.warn(err); }
+      }
+      if (!lleno && !enLocal) {
+        const cuerpo = new URLSearchParams({ "form-name": "reserva-clase" });
+        Object.entries(reserva).forEach(([k, v]) => cuerpo.append(k, v == null ? "" : String(v)));
+        try { const r = await fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: cuerpo.toString() }); ok = ok || r.ok; } catch (err) { console.warn(err); }
+      }
+      if (!supabaseActivo && enLocal) { console.info("[modo prueba] Reserva:", reserva); ok = true; }
+      boton.disabled = false; boton.textContent = "Confirmar reserva";
+
+      if (lleno) {
+        estado.className = "form-estado mal";
+        estado.innerHTML = "Ese horario se acaba de ocupar. Por favor elige otro.";
+        st.elegido = null; setTimeout(() => { irPaso(2); pintarSemana(); estado.className = "form-estado oculto"; }, 2200);
+        return;
+      }
+      const textoWa = `Hola, reservé una clase desde la web 📅\n• Alumno: ${reserva.alumno} (${reserva.grado})\n• Condición: ${reserva.condicion}${reserva.programa ? `\n• Programa: ${reserva.programa}` : ""}\n• Clase: ${textoClase()}\n• Apoderado: ${reserva.apoderado}`;
+      if (ok) {
+        medir("Lead", { programa: reserva.programa || "Reserva de clase", pagina: location.pathname });
+        $("#rc-p3").hidden = true;
+        const listo = $("#rc-listo");
+        listo.hidden = false;
+        listo.innerHTML = `<div class="rc-check">✓</div><h2>¡Clase reservada!</h2>
+          <p>Te esperamos el <strong>${textoClase()}</strong>.<br>Envíanos este mensaje por WhatsApp para que tu asesora te confirme y te pase el enlace de la clase.</p>
+          <a class="boton boton-verde" href="${linkWhatsapp(textoWa)}" data-medir="whatsapp" target="_blank" rel="noopener">Enviar por WhatsApp</a>`;
+      } else {
+        estado.className = "form-estado mal";
+        estado.innerHTML = `No pudimos registrar la reserva, pero puedes enviarla directo por WhatsApp.<br><a class="boton boton-verde" href="${linkWhatsapp(textoWa)}" data-medir="whatsapp" target="_blank" rel="noopener">Enviar por WhatsApp</a>`;
+      }
+    });
+  }
+
+  /* ------------------------------------------------------------------
      EFECTOS: contadores y aparición al hacer scroll
      ------------------------------------------------------------------ */
   function activarEfectos() {
@@ -664,6 +909,7 @@
     activarVideos();
     await pintarFormularios();
     pintarReservaSOS();
+    await pintarReservaClase();
     activarEnlacesWhatsapp();
     pintarWhatsappFlotante();
     activarEfectos();

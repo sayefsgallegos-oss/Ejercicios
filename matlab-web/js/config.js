@@ -69,6 +69,30 @@ window.MATLAB_CONFIG = {
   },
   serviciosContacto: ["Programas Integrales", "Talleres Grupales", "Clases S.O.S.", "Capacitación para empresas", "Otras opciones"],
 
+  /* ---------- Reserva de clases (botón "Reserva tu clase") ---------- */
+  reservas: {
+    // Respuestas posibles a "Condición del alumno"
+    condiciones: [
+      { valor: "Alumno nuevo", detalle: "Primera clase con nosotros." },
+      { valor: "Ya es alumno", detalle: "Quiere reservar otra clase." },
+      { valor: "Tiene examen pronto", detalle: "Necesita una clase urgente." },
+    ],
+    anticipacionHoras: 3,      // no se puede reservar con menos de 3 horas
+    semanasAdelante: 3,        // cuántas semanas hacia adelante se pueden ver
+    horaInicio: 7, horaFin: 21, // rango que muestra el calendario
+    zonaHoraria: "America/Lima",
+    /* Horarios en que hay profesores, por nivel.
+       Día: 0 = lunes, 1 = martes ... 5 = sábado, 6 = domingo.
+       Cada número es la hora de inicio (16 = clase de 4 a 5 p.m.).
+       cupos = cuántos alumnos pueden reservar el mismo horario (profesores libres).
+       Cuando Supabase esté conectado, esto se edita en la tabla "disponibilidad". */
+    disponibilidad: {
+      primaria:   { 0: [15, 16, 17, 18], 1: [9, 15, 16, 17, 18], 2: [15, 16, 17, 18], 3: [9, 15, 16, 17, 18], 4: [15, 16, 17], 5: [9, 10, 11] },
+      secundaria: { 0: [16, 17, 18, 19], 1: [9, 16, 17, 18, 19], 2: [16, 17, 18, 19, 20], 3: [9, 16, 17, 18, 19], 4: [16, 17, 18], 5: [9, 10, 11, 12] },
+    },
+    cupos: { primaria: 2, secundaria: 2 },
+  },
+
   /* ---------- Clases S.O.S. ---------- */
   sos: {
     precios: [

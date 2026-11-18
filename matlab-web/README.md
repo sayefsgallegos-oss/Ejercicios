@@ -9,6 +9,7 @@ Web en HTML puro, sin WordPress. Se publica en **Netlify**, guarda los formulari
 | Teléfono, WhatsApp, correos, redes, libro de reclamaciones | `js/config.js` |
 | Aviso de temporada (la franja roja debajo del carrusel) | `js/config.js` → `avisoTemporada` |
 | Horarios, grados y precios S.O.S. de los formularios | `js/config.js` |
+| **Horarios disponibles para "Reserva tu clase"** y cupos por horario | `js/config.js` → `reservas` *(o Supabase, tabla `disponibilidad`)* |
 | Banners del carrusel | `js/datos.js` → `banners` *(o Supabase, tabla `banners`)* |
 | Textos, video, beneficios o mensaje de WhatsApp de un programa | `js/datos.js` → `programas` *(o Supabase, tabla `programas`)* |
 | Activar o quitar un programa | `activo: true/false` y `en_home: true/false` en el programa |
@@ -39,6 +40,7 @@ programas/talleres-grupales/                 Lista de talleres grupales
   mateinnovando/                             Mateinnovando
   finanzas-para-jovenes/                     Taller Financiero
 clases-de-emergencia/                        Clases S.O.S. (reserva en 2 pasos)
+reserva-tu-clase/                            Reserva tu clase: grado + condición -> calendario semanal -> confirmar
 nosotros/                                    Nosotros + equipo
 contactanos/                                 Contáctanos
 registro-de-notas-matlab/                    Portal para Padres (en pausa)
@@ -71,6 +73,7 @@ Cada vez que se sube un cambio a GitHub, Netlify publica solo en ~1 minuto.
 4. Desde ese momento:
    - Los contactos llegan a la tabla **`leads`** (con programa, grado, horario, página y campaña de anuncio). Tu equipo puede marcar `estado` y `asesora`.
    - Las reservas S.O.S. llegan a **`reservas_sos`**.
+   - Las reservas de "Reserva tu clase" llegan a **`reservas_clase`**. Cada horario tiene `cupos` (tabla `disponibilidad`): cuando se llenan, el horario aparece como **Ocupado** y la base de datos impide reservarlo dos veces. La web nunca ve nombres ni celulares de otras reservas, solo cuántas hay por horario.
    - Banners, programas y equipo se editan desde *Table Editor*, como una hoja de cálculo, sin tocar código.
 
 ## Medición
