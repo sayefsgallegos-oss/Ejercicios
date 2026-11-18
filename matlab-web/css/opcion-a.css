@@ -343,3 +343,24 @@
   .inf-logros { grid-template-columns: 1fr 1fr; }
   .inf { max-height: 560px; }
 }
+
+/* ---------- Banda "Para padres" con foto ---------- */
+.pa-padres { position: relative; display: grid; background: #f1f1f0; overflow: hidden; }
+.pa-padres > picture, .pa-padres > .pa-padres-in { grid-area: 1 / 1; }
+.pa-padres > picture img { width: 100%; height: 100%; min-height: 520px; max-height: 680px; object-fit: cover; object-position: left center; display: block; }
+.pa-padres-in { display: flex; justify-content: flex-end; align-items: center; position: relative; z-index: 1; }
+.pa-padres-texto { width: min(460px, 38%); padding-block: 3rem; }
+.pa-padres-texto > p:not(.pa-eyebrow) { color: var(--suave); font-size: 1.08rem; margin: 0 0 1.6rem; }
+.pa-padres-texto .pa-hero-botones { margin-bottom: 0; }
+@media (max-width: 1100px) and (min-width: 901px) { .pa-padres-texto { width: 42%; } .pa-padres > picture img { object-position: 20% center; } }
+@media (max-width: 900px) {
+  .pa-padres > picture, .pa-padres > .pa-padres-in { grid-area: auto; }
+  .pa-padres > picture img { min-height: 0; max-height: none; aspect-ratio: 1 / 1; }
+  .pa-padres-in { justify-content: flex-start; }
+  .pa-padres-texto { width: 100%; padding-block: 2rem 3rem; }
+  .pa-padres-texto .pa-btn { width: 100%; }
+}
+@media (min-width: 901px) {
+  .pa-padres::after { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(90deg, rgba(241,241,240,0) 48%, rgba(241,241,240,.88) 60%, #f1f1f0 72%); }
+  .pa-padres-texto { width: min(440px, 34%); }
+}
