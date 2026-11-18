@@ -589,7 +589,16 @@ h1, h2, h3 { line-height: 1.15; margin: 0 0 .5em; }
 .rc-lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: .5rem; }
 .rc-lista .rc-bloque { margin: 0; padding: .8rem; font-size: .95rem; text-align: center; grid-row: auto !important; }
 .rc-vacio { grid-column: 1 / -1; text-align: center; color: #6a7b93; padding: 1.5rem; border: 2px dashed #d6e1ec; border-radius: 12px; margin: 0; }
-@media (max-width: 760px) { .rc-cal-scroll { display: none; } .rc-movil { display: block; } }
+.rc-horas { position: sticky; left: 0; z-index: 3; background: var(--blanco); }
+.rc-cal > .rc-cab:first-child { position: sticky; left: 0; z-index: 4; }
+.rc-desliza { display: none; font-size: .82rem; color: #5d6f8c; margin: 0 0 .5rem; font-weight: 600; }
+@media (max-width: 760px) {
+  #reserva-clase { --rc-hora: 52px; }
+  .rc-cal { grid-template-columns: 46px repeat(7, minmax(100px, 1fr)); min-width: 746px; }
+  .rc-bloque { font-size: .72rem; padding: .3rem .4rem; margin: 2px 3px; }
+  .rc-bloque b { white-space: nowrap; letter-spacing: -.02em; }
+  .rc-desliza { display: block; }
+}
 
 .rc-seleccion { margin-top: 1rem; padding: .8rem 1rem; border-radius: 12px; background: #fff8d9; border: 1px solid var(--amarillo); display: flex; justify-content: space-between; align-items: center; gap: .8rem; flex-wrap: wrap; }
 .rc-seleccion p { margin: 0; color: var(--azul-oscuro); }

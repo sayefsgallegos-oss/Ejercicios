@@ -724,6 +724,7 @@
             <button class="rc-link" type="button" id="rc-hoy">Semana actual</button>
           </div>
         </div>
+        <p class="rc-desliza">Desliza la tabla hacia los lados para ver toda la semana →</p>
         <div class="rc-cal-scroll"><div class="rc-cal" id="rc-cal"></div></div>
         <div class="rc-movil"><div class="rc-tabs" id="rc-tabs"></div><div class="rc-lista" id="rc-lista"></div></div>
         <div class="rc-leyenda"><span><i class="rc-libre-i"></i>Disponible</span><span><i class="rc-ocupado-i"></i>Ocupado</span><span><i class="rc-elegido-i"></i>Tu elección</span></div>
