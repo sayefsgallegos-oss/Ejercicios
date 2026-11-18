@@ -491,3 +491,9 @@
 .pa .testi { box-shadow: var(--sombra); border: 1px solid var(--linea); }
 .pa .testi-flecha { color: var(--azul-oscuro); border: 1px solid var(--linea); }
 .pa .menu-destacado { font-weight: 700; }
+
+/* Portada de verano */
+.pa-slide-verano .pa-hero-foto img { object-position: center; }
+.pa-slide-verano .pa-eyebrow { color: #b45309; }
+.pa-sol { font-size: 1rem; }
+@media (max-width: 1520px) { .pa-link-padres { display: none; } } .pa-link-padres { white-space: nowrap; }
