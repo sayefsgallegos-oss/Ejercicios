@@ -657,3 +657,58 @@ body:not(.pa) .video { border-width: 8px; }
 body:not(.pa) .persona h3 { text-shadow: none; }
 body:not(.pa) .aviso { background: var(--azul-oscuro); }
 body:not(.pa) .aviso .boton { background: var(--rojo); color: #fff; }
+
+/* =====================================================================
+   PROPUESTA B PROFESIONAL v2 — componentes menos infantiles
+   (solo páginas sin la clase .pa)
+   ===================================================================== */
+/* Tarjetas de programas: sin cuaderno ni espiral */
+body:not(.pa) .tarjetas { grid-template-columns: repeat(2, minmax(0, 520px)); gap: 1.6rem; }
+@media (max-width: 860px) { body:not(.pa) .tarjetas { grid-template-columns: minmax(0, 520px); } }
+body:not(.pa) .cuaderno, body:not(.pa) .cuaderno:nth-child(even) {
+  transform: none; border: 0; border-radius: 16px; background: #fff; text-align: left; align-items: flex-start;
+  padding: 1.6rem 1.6rem 1.8rem; box-shadow: 0 14px 34px rgba(8, 35, 75, .18); overflow: hidden;
+}
+body:not(.pa) .cuaderno::before { display: none; }
+body:not(.pa) .cuaderno:hover { transform: translateY(-4px); box-shadow: 0 20px 44px rgba(8, 35, 75, .24); }
+body:not(.pa) .cuaderno .tarjeta-foto { width: calc(100% + 3.2rem); max-width: none; margin: -1.6rem -1.6rem 1.3rem; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
+body:not(.pa) .cuaderno h3 { background: none; display: block; padding: 0; color: var(--azul-oscuro); font-size: clamp(1.4rem, 2.4vw, 1.75rem); font-weight: 800; margin: 0 0 .7rem; }
+body:not(.pa) .cuaderno h3::after { content: ""; display: block; width: 44px; height: 4px; border-radius: 4px; background: var(--amarillo); margin-top: .55rem; }
+body:not(.pa) .cuaderno h3 + p { margin-top: 0; }
+body:not(.pa) .cuaderno p { color: #4a5872; font-size: 1rem; }
+body:not(.pa) .cuaderno .etiqueta { top: 1rem; left: 1rem; right: auto; background: rgba(255,255,255,.94); color: var(--azul-oscuro); }
+body:not(.pa) .cuaderno .boton { padding: .75em 1.6em; }
+
+/* Encabezado de programas sobrio */
+body:not(.pa) .barra-programas { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.25); box-shadow: none; border-radius: 14px; padding: 1rem 1.4rem; max-width: 1064px; }
+body:not(.pa) .barra-programas h3 { color: #fff; font-size: clamp(1.2rem, 2.2vw, 1.5rem); }
+body:not(.pa) .barra-programas span { color: #fff; background: var(--azul-oscuro); padding: .3rem .8rem; border-radius: 999px; font-size: .85rem; font-weight: 600; }
+
+/* Checks: círculo amarillo con check azul marino */
+body:not(.pa) .checks li { color: var(--azul-oscuro); font-weight: 500; gap: 1rem; }
+body:not(.pa) .checks li::before, body:not(.pa) .checks.chicos li::before {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--amarillo) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23102c55' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / 15px no-repeat;
+}
+
+/* Videos sin marco grueso */
+body:not(.pa) .video { border: 0; border-radius: 16px; box-shadow: 0 18px 40px rgba(8, 35, 75, .28); }
+
+/* Formulario y cajas */
+body:not(.pa) .caja-form { background: var(--azul-oscuro); box-shadow: 0 18px 40px rgba(8, 35, 75, .3); }
+body:not(.pa) .caja-form h2 { font-weight: 800; }
+body:not(.pa) .campo input, body:not(.pa) .campo select { border-radius: 10px; }
+
+/* Cifras (Nosotros): tarjetas limpias, sin estrellas */
+body:not(.pa) .cifra { background: #fff; border-radius: 16px; padding: 1.6rem 1.2rem; box-shadow: 0 14px 34px rgba(8, 35, 75, .16); }
+body:not(.pa) .cifra::before { display: none; }
+body:not(.pa) .cifra .numero b { color: var(--azul); }
+body:not(.pa) .cifra .pastilla { background: transparent; color: #4a5872; text-transform: none; font-weight: 500; font-size: 1rem; padding: 0; margin-top: .6rem; }
+
+/* Especificaciones y misión/visión con el mismo lenguaje */
+body:not(.pa) .especificaciones { background: #fff; }
+body:not(.pa) .especificaciones h3 { border-bottom-color: #e3e9f2; }
+body:not(.pa) .mision-vision article { border-top: 4px solid var(--amarillo); }
+body:not(.pa) .barra-datos { background: #fff; }
+body:not(.pa) .barra-datos .dato + .dato { border-left-color: #e3e9f2; }
+body:not(.pa) .cuaderno .tarjeta-foto, .pa .cuaderno .tarjeta-foto { height: auto; }
