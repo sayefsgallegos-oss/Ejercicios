@@ -319,6 +319,9 @@
   /* ------------------------------------------------------------------
      TARJETAS DE PROGRAMAS
      ------------------------------------------------------------------ */
+  // En la Propuesta A cada programa tiene su propia página dentro de /opcion-a/
+  const urlA = (p) => p.slug === "mateverano" ? "/opcion-a/mateverano/" : p.slug === "clase-sos" ? "/opcion-a/clases-sos/" : `/opcion-a/programas/${p.slug}/`;
+
   async function pintarTarjetas() {
     for (const lugar of $$("[data-tarjetas]")) {
       const filtro = lugar.dataset.tarjetas; // "home" | "individual" | "grupal"
@@ -330,7 +333,7 @@
           ${filtro === "home" ? `<span class="etiqueta">${p.tipo === "grupal" ? "Grupal" : "Individual"}</span>` : ""}
           <h3>${esc(p.nombre)}</h3>
           <p>${esc(p.resumen)}</p>
-          <a class="boton boton-rojo" href="${esc(p.url)}">¡Quiero saber más!</a>
+          <a class="boton boton-rojo" href="${esc(lugar.closest(".pa") ? urlA(p) : p.url)}">¡Quiero saber más!</a>
         </article>`).join("");
     }
     const pedido = $("#a-pedido");
@@ -500,6 +503,55 @@
   /* ------------------------------------------------------------------
      PÁGINA DE PROGRAMA (plantilla única)
      ------------------------------------------------------------------ */
+  /* ------------------------------------------------------------------
+     PÁGINA DE PROGRAMA — PROPUESTA A (misma ficha de js/datos.js)
+     ------------------------------------------------------------------ */
+  async function pintarProgramaA() {
+    const lugar = $("#programa-a");
+    if (!lugar) return;
+    const p = (await programas()).find((x) => x.slug === lugar.dataset.slug);
+    if (!p) { lugar.innerHTML = '<section class="pa-seccion"><div class="pa-ancho"><h1>Programa no disponible</h1></div></section>'; return; }
+    document.body.dataset.whatsapp = p.whatsapp_mensaje;
+    const datos = p.datos || [];
+    lugar.innerHTML = `
+      <section class="pa-hero pa-hero-simple">
+        <div class="pa-ancho pa-hero-in">
+          <div class="pa-hero-texto">
+            <p class="pa-eyebrow">${esc(p.etiqueta)} · 100% virtual</p>
+            <h1>${esc(p.nombre)}</h1>
+            <p class="pa-lead">${esc(p.descripcion)}</p>
+            <div class="pa-hero-botones">
+              <a class="pa-btn pa-btn-primario pa-btn-grande" href="#inscripcion">Quiero información <span aria-hidden="true">→</span></a>
+              <a class="pa-btn pa-btn-borde pa-btn-grande" href="/opcion-a/reserva/?programa=${encodeURIComponent(p.slug)}">Reservar una clase</a>
+            </div>
+          </div>
+          <div class="pa-hero-foto"><img src="${esc(p.foto_tarjeta || p.imagen)}" alt="Alumno del programa ${esc(p.nombre)}" width="720" height="480" fetchpriority="high"></div>
+        </div>
+      </section>
+      ${datos.length ? `<section class="pa-datos-verano" aria-label="Detalles del programa"><div class="pa-ancho pa-datos-in" style="grid-template-columns:repeat(${Math.min(datos.length, 4)},1fr)">${datos.map((d) => `<div><b>${esc(d.texto)}</b></div>`).join("")}</div></section>` : ""}
+      <section class="pa-seccion" id="inscripcion">
+        <div class="pa-ancho pa-inscripcion">
+          <div>
+            <p class="pa-eyebrow">El programa</p>
+            <h2 class="pa-h2">Qué incluye <span>${esc(p.nombre)}</span></h2>
+            ${p.video_youtube ? htmlVideo(p.video_youtube, p.video_miniatura, `Ver video de ${p.nombre}`) : ""}
+            ${p.beneficios?.length ? `<ul class="pa-lista-check pa-beneficios">${p.beneficios.map((b) => `<li>${esc(b.replace(/\.$/, ""))}</li>`).join("")}</ul>` : ""}
+            ${p.libros?.length ? `<div class="pa-libros">${p.libros.map((l) => `<img src="${esc(l.imagen)}" alt="Libro ${esc(l.titulo)}" loading="lazy">`).join("")}<p>Basado en los libros ${p.libros.map((l) => `<em>${esc(l.titulo)}</em>`).join(" y ")}, de Marco Loret de Mola.</p></div>` : ""}
+            <dl class="pa-specs"><div><dt>Para alumnos de</dt><dd>${esc(p.para_quien)}</dd></div><div><dt>Disponibilidad</dt><dd>${esc(p.disponibilidad)}</dd></div></dl>
+          </div>
+          <div class="pa-lateral">
+            <div class="caja-form pa-form">
+              <h2>Te contactamos</h2>
+              <p>Déjanos tus datos y una asesora te escribe hoy.</p>
+              <div data-formulario="${esc(p.formulario)}" data-programa="${esc(p.slug)}"></div>
+            </div>
+            <p class="pa-o-wa">¿Prefieres WhatsApp? <a data-whatsapp-texto="${esc(p.whatsapp_mensaje)}">Escríbenos aquí</a></p>
+          </div>
+        </div>
+      </section>`;
+    activarEnlacesWhatsapp(lugar);
+  }
+
   async function pintarPrograma() {
     const lugar = $("#programa");
     if (!lugar) return;
@@ -1039,7 +1091,7 @@
      ARRANQUE
      ------------------------------------------------------------------ */
   async function iniciar() {
-    await Promise.all([pintarCabecera(), pintarCarrusel(), pintarTarjetas(), pintarPrograma(), pintarEquipo()]);
+    await Promise.all([pintarCabecera(), pintarCarrusel(), pintarTarjetas(), pintarPrograma(), pintarProgramaA(), pintarEquipo()]);
     pintarPie();
     pintarAviso();
     activarVideos();
